@@ -1,0 +1,114 @@
+{
+  "menu": {
+    "dashboard": "Dashboard",
+    "category": "Category",
+    "saved": "Saved",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "header": {
+    "searchQuiz": "Search Quiz"
+  },
+  "auth": {
+    "register": "Create Your Account",
+    "login": "Login to your Account",
+    "username": "Username*",
+    "email": "Email Address*",
+    "password": "Password*",
+    "enterUsername": "Enter username",
+    "enterEmai": "Enter email address",
+    "enterPassword": "Enter password",
+    "forgotPassword": "Forgot Password?",
+    "registerButton": "Create Account",
+    "registerGoogle": "Sign Up with Google",
+    "haveAccount": "Already have an account?",
+    "loginNow": "Login Now",
+    "loginButton": "Login",
+    "loginGoogle": "Login with Google",
+    "dontHaveAccount": "Don't have an account?",
+    "signUpNow": "Sign Up Now",
+    "or": "OR",
+    "quotes": "Those people who develop the ability to continuously acquire new and better forms of knowledge that they can apply to their work and to their lives will be the movers and shakers in our society for the indefinite future",
+    "quotesBy": "Brian Tracy"
+  },
+  "quizCard": {
+    "question": "Question",
+    "minutes": "minutes",
+    "plays": "plays"
+  },
+  "dashboard": {
+    "skillLevel": "Skill level",
+    "points": "Points",
+    "quizFinished": "Quiz Finished",
+    "timeSpent": "Time Spent",
+    "correctAnswer": "Correct Answer",
+    "mins": "mins",
+    "title1": "Popular Quiz",
+    "title2": "Fetured Category",
+    "viewAll": "View All"
+  },
+  "category": {
+    "title": "Select Category",
+    "subtitle": "Explore a variety of topics and test your knowledge",
+    "category": "Category",
+    "more": "More"
+  },
+  "quiz": {
+    "quizDetail": {
+      "title": "Quiz",
+      "subtitle": "Read the following instructions",
+      "category": "Category",
+      "Questions": "Questions",
+      "timeLimit": "Time Limit",
+      "sec": "Sec / Question",
+      "Points": "Points",
+      "instruction1": "Welcome to the Quiz! This quiz contains multiple-choice questions. Familiarity with the topics is key to enjoying the quiz. Keep the following in mind:",
+      "instructionTime": "Timing - Each question has a time limit of 30 seconds. You must complete the question within this timeframe.",
+      "instructionAnswer": "Answers - You need to answer the current question to move on to the next one.",
+      "instruction2": "To start the quiz, click the 'Start' button. When you have finished all the questions, click the 'Submit' button to complete the quiz.",
+      "start": "Start"
+    },
+    "questions": {
+      "question": "Question",
+      "second": "s",
+      "send": "Send",
+      "submit": "Submit",
+      "submitQuiz": "Are you Sure you want to submit Quiz?",
+      "yes": "Yes",
+      "no": "No",
+      "congrats": "Congratulations",
+      "earnScore": "You have earned a score of",
+      "tryAgain": "Try again",
+      "finish": "Finish"
+    }
+  },
+  "saved": {
+    "title": "Saved Quiz",
+    "subtitle": "Pick a quiz and beat your previous score"
+  },
+  "settings": {
+    "submenu1": {
+      "title": "Settings",
+      "profile": "Profile",
+      "username": "Usernmae",
+      "name": "Name",
+      "email": "Email",
+      "language": "Language",
+      "english": "English",
+      "indonesian": "Indonesian",
+      "account": "Account Settings",
+      "password": "Update Password",
+      "delete": "Delete Account"
+    },
+    "submenu2": {
+      "title": "Quiz History",
+      "date": "Date Attempt",
+      "quiz": "Quiz Name",
+      "score": "Score",
+      "question": "Number of Question",
+      "answer": "Correct Answer",
+      "duration": "Duration",
+      "mins": "mins"
+    }
+  }
+}
