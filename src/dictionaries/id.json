@@ -1,0 +1,114 @@
+{
+  "menu": {
+    "dashboard": "Beranda",
+    "category": "Kategori",
+    "saved": "Tersimpan",
+    "settings": "Pengaturan",
+    "logout": "Keluar"
+  },
+  "header": {
+    "searchQuiz": "Cari Kuis"
+  },
+  "auth": {
+    "register": "Buat Akun Anda",
+    "login": "Masuk ke Akun Anda",
+    "username": "Username*",
+    "email": "Alamat Email*",
+    "password": "Password*",
+    "enterUsername": "Masukkan username",
+    "enterEmai": "Masukkan alamat email",
+    "enterPassword": "Masukkan password",
+    "forgotPassword": "Lupa Password?",
+    "registerButton": "Buat Akun",
+    "registerGoogle": "Daftar dengan Google",
+    "haveAccount": "Sudah punya akun?",
+    "loginNow": "Masuk Sekarang",
+    "loginButton": "Masuk",
+    "loginGoogle": "Masuk dengan Google",
+    "dontHaveAccount": "Belum punya akun?",
+    "signUpNow": "Daftar Sekarang",
+    "or": "ATAU",
+    "quotes": "Belajar adalah seperti berenang melawan arus; begitu berhenti, kita akan terdorong kembali. Dunia tidak pernah berhenti berubah, begitu pula dengan pengetahuan yang terus bertambah setiap harinya. Berhenti belajar berarti memilih tertinggal.",
+    "quotesBy": "Mao Zedong"
+  },
+  "quizCard": {
+    "question": "Pertanyaan",
+    "minutes": "menit",
+    "plays": "bermain"
+  },
+  "dashboard": {
+    "skillLevel": "Skill level",
+    "points": "Poin",
+    "quizFinished": "Kuis Selesai",
+    "timeSpent": "Waktu Kuis",
+    "correctAnswer": "Jawaban Benar",
+    "mins": "menit",
+    "title1": "Kuis Populer",
+    "title2": "Kaegori Pilihan",
+    "viewAll": "Lihat Semua"
+  },
+  "category": {
+    "title": "Pilih Kategori",
+    "subtitle": "Jelajahi beragam topik dan uji pengetahuan Kamu",
+    "category": "Kategori",
+    "more": "Lainnya"
+  },
+  "quiz": {
+    "quizDetail": {
+      "title": "Kuis",
+      "subtitle": "Yuk, simak instruksi-instruksi berikut!",
+      "category": "Kategori",
+      "Questions": "Pertanyaan",
+      "timeLimit": "Batas Waktu",
+      "sec": "Detik / Pertanyaan",
+      "Points": "Poin",
+      "instruction1": "Selamat datang di Kuis! Kuis ini berisi pertanyaan pilihan ganda. Akrab dengan topiknya itu penting buat seru-seruan di kuis ini. Ingat hal-hal berikut:",
+      "instructionTime": "Waktu - Kamu punya waktu 30 detik buat setiap pertanyaan. Usahain jawab pertanyaannya dalam waktu itu ya.",
+      "instructionAnswer": "Jawaban - Kamu harus jawab pertanyaan yang ada sekarang untuk bisa lanjut ke pertanyaan selanjutnya.",
+      "instruction2": "Untuk memulai kuis, klik tombol 'Mulai'. Setelah kamu menjawab semua pertanyaan, klik tombol 'Submit' untuk menyelesaikan kuis.",
+      "start": "Mulai"
+    },
+    "questions": {
+      "question": "Pertanyaan",
+      "second": "d",
+      "send": "Kirim",
+      "submit": "Submit",
+      "submitQuiz": "Apakah Kamu yakin ingin mengirimkan Kuis?",
+      "yes": "Ya",
+      "no": "Tidak",
+      "congrats": "Selamat",
+      "earnScore": "Kamu mendapatkan poin sebesar",
+      "tryAgain": "Coba Lagi",
+      "finish": "Selesai"
+    }
+  },
+  "saved": {
+    "title": "Kuis Tersimpan",
+    "subtitle": "Pilih kuis dan kalahkan skor Kamu sebelumnya"
+  },
+  "settings": {
+    "submenu1": {
+      "title": "Pengaturan",
+      "profile": "Profil",
+      "username": "Usernmae",
+      "name": "Nama",
+      "email": "Email",
+      "language": "Bahasa",
+      "english": "Inggris",
+      "indonesian": "Indonesia",
+      "account": "Pengaturan Akun",
+      "password": "Perbarui Password",
+      "delete": "Hapus Akun"
+    },
+    "submenu2": {
+      "title": "Riwayat Kuis",
+      "date": "Tanggal Percobaan",
+      "quiz": "Nama Kuis",
+      "score": "Skor",
+      "question": "Jumlah Pertanyaan",
+      "answer": "Jawaban Benar",
+      "duration": "Durasi",
+      "mins": "menit"
+    }
+  }
+}
