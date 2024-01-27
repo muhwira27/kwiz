@@ -1,7 +1,7 @@
 export interface CategoryProps {
   id: string;
-  enName: string;
-  idName: string;
+  name: string;
+  thumbnail: string;
   quizzes: string[];
 }
 
@@ -10,8 +10,8 @@ export async function jsonToCategory(json: {
 }): Promise<CategoryProps> {
   return {
     id: json.id || '',
-    enName: json.enName || '',
-    idName: json.idName || '',
+    name: json.name || '',
+    thumbnail : json.thumbnail || '',
     quizzes: json.quizzez || [],
   };
 }
