@@ -9,7 +9,7 @@ export async function getPopularQuiz(
     const quizzesQuery = query(
       collection(db, 'quiz'),
       orderBy('numberOfPlayers', 'desc'),
-      limit(3)
+      limit(5)
     );
     const quizzesSnapshot = await getDocs(quizzesQuery);
 
