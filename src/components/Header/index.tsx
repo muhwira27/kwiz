@@ -13,7 +13,7 @@ export default function Header({ header }: { header: Header }) {
   const { toggleSidebar } = useSidebar();
 
   return (
-    <header className="flex items-center justify-between px-[14px] pb-3 pt-5 md:pl-0 md:pr-8">
+    <header className="flex items-center justify-between px-[14px] pb-3 pt-5 sm:px-0">
       <button onClick={toggleSidebar} className="md:hidden">
         <MenuRounded className="text-slate-grey" style={{ fontSize: '30px' }} />
       </button>
