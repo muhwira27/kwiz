@@ -25,7 +25,7 @@ export default async function RootLayout({
     <SidebarProvider>
       <section className="flex h-screen w-screen">
         <Sidebar menu={menu} lang={params.lang} />
-        <section className="flex w-full flex-col">
+        <section className="flex w-full flex-col sm:px-6 md:pr-7 lg:pr-8">
           <Header header={header} />
           {children}
         </section>
