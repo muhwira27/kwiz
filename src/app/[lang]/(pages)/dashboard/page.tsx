@@ -6,6 +6,7 @@ import getFeaturedCategory from '@/firebase/category/getFeaturedCategory';
 
 import QuizCard from '@/components/QuizCard';
 import CategoryCard from '@/components/CategoryCard';
+import StatisticCard from '@/components/StatisticCard';
 
 export default async function Dashboard({
   params,
@@ -18,7 +19,18 @@ export default async function Dashboard({
   const categoryData = await getFeaturedCategory(params.lang);
 
   return (
-    <main className="mt-3 flex h-full w-full flex-col gap-10 rounded-large bg-white px-6 py-6 shadow-custom1 lg:px-9 lg:py-10">
+    <main className="mb-3 mt-2 flex h-fit w-full flex-col gap-10 rounded-large bg-white px-6 py-6 shadow-custom1 sm:mt-3 md:mb-5 lg:px-9 lg:py-10">
+      <section>
+        <StatisticCard
+          skillLevel={dashboard.skillLevel}
+          points={dashboard.points}
+          quizFinished={dashboard.quizFinished}
+          timeSpent={dashboard.timeSpent}
+          correctAnswer={dashboard.correctAnswer}
+          mins={dashboard.mins}
+        />
+      </section>
+
       <section>
         <h5 className="text-lg font-bold text-slate-grey md:text-xxl">
           {dashboard.title1}
