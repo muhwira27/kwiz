@@ -99,7 +99,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
         />
       </div>
 
-      <div className="flex h-full flex-col items-start justify-between px-7">
+      <div className="flex h-full flex-col items-start justify-between px-7 md:pr-0">
         <nav>
           <ul className="flex flex-col items-start gap-2 md:gap-3">
             {navigation.map((item) => (
