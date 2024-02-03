@@ -51,7 +51,9 @@
     "title": "Select Category",
     "subtitle": "Explore a variety of topics and test your knowledge",
     "category": "Category",
-    "more": "More"
+    "more": "More",
+    "notFound": "Category Not Found",
+    "notFoundSub": "The category you are looking for does not exist or is not yet available."
   },
   "quiz": {
     "quizDetail": {
@@ -65,11 +67,14 @@
       "instruction": "Instruction",
       "instruction1": "Welcome to the Quiz! This quiz contains multiple-choice questions. Familiarity with the topics is key to enjoying the quiz. Keep the following in mind:",
       "instructionTime1": "Timing ",
-      "instructionTime2": "- Each question has a time limit of 30 seconds. You must complete the question within this timeframe.",
+      "instructionTime2": "- Each question has a time limit of ",
+      "instructionTime3": "seconds. You must complete the question within this timeframe.",
       "instructionAnswer1": "Answers ",
       "instructionAnswer2": "- You need to answer the current question to move on to the next one.",
       "instruction2": "To start the quiz, click the 'Start' button. When you have finished all the questions, click the 'Submit' button to complete the quiz.",
-      "start": "Start"
+      "start": "Start",
+      "notFound": "Quiz Not Found",
+      "notFoundSub": "The quiz you are looking for does not exist or is not yet available."
     },
     "questions": {
       "question": "Question",
