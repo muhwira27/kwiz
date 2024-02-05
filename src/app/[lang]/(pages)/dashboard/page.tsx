@@ -37,21 +37,25 @@ export default async function Dashboard({
         </h5>
         <div className="flex h-fit w-full gap-3 overflow-x-auto rounded-2xl px-2 py-4 scrollbar-hide">
           {quizData &&
-            quizData.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} quizCard={quizCard} />
-            ))}
+            quizData.map((quiz) => {
+              return (
+                <Link key={quiz.id} href={`quiz/${quiz.id}`}>
+                  <QuizCard quiz={quiz} quizCard={quizCard} />
+                </Link>
+              );
+            })}
         </div>
       </section>
 
       <section className="flex w-fit flex-col gap-6">
         <section className="flex items-center justify-between text-slate-grey">
           <h5 className="text-lg font-bold md:text-xxl">{dashboard.title2}</h5>
-          <Link href="#">
+          <Link href="/category">
             <p className="text-sm md:text-base">{dashboard.viewAll}</p>
           </Link>
         </section>
 
-        <div className="grid grid-cols-2 gap-4 min-[492px]:gap-5 min-[580px]:gap-6 min-[800px]:grid-cols-3 min-[1230px]:flex">
+        <div className="grid grid-cols-2 gap-4 min-[492px]:gap-5 min-[580px]:gap-6 min-[800px]:grid-cols-3 min-[1230px]:flex min-[1230px]:flex-wrap">
           {categoryData &&
             categoryData.map((category) => (
               <CategoryCard key={category.id} category={category} />
