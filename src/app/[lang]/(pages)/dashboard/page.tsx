@@ -57,9 +57,13 @@ export default async function Dashboard({
 
         <div className="grid grid-cols-2 gap-4 min-[492px]:gap-5 min-[580px]:gap-6 min-[800px]:grid-cols-3 min-[1230px]:flex min-[1230px]:flex-wrap">
           {categoryData &&
-            categoryData.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
+            categoryData.map((category) => {
+              return (
+                <Link key={category.id} href={`category/${category.id}`}>
+                  <CategoryCard category={category} />
+                </Link>
+              );
+            })}
         </div>
       </section>
     </main>

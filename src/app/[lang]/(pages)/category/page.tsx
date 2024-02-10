@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Locale } from '@/i18n.config';
 import { getDictionary } from '@/lib/dictionary';
 import getAllCategory from '@/firebase/category/getAllCategory';
@@ -21,9 +22,13 @@ export default async function Category({
 
       <section className="grid w-fit grid-cols-2 gap-6 sm:flex sm:flex-wrap ">
         {categoryData &&
-          categoryData.map((category) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
+          categoryData.map((category) => {
+            return (
+              <Link key={category.id} href={`category/${category.id}`}>
+                <CategoryCard category={category} />
+              </Link>
+            );
+          })}
       </section>
     </main>
   );
