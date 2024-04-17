@@ -15,6 +15,8 @@ import {
   Logout,
 } from '@mui/icons-material';
 import { useSidebar } from '../../context/SidebarContext';
+import { useAuth } from '@/firebase/auth/AuthUserProvider';
+import { useRouter } from 'next/navigation';
 
 type Menu = {
   dashboard: string;
@@ -25,6 +27,8 @@ type Menu = {
 
 export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
   const pathname = usePathname();
+  const auth = useAuth();
+  const router = useRouter();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { isSidebarVisible, toggleSidebar } = useSidebar();
 
@@ -56,6 +60,15 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
   const handleNavLinkClick = () => {
     if (isScreenMd && isSidebarVisible) {
       toggleSidebar();
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await auth.logOut();
+      router.push('/login');
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -128,15 +141,15 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
         </nav>
 
         <div className="pb-2">
-          <Link
-            href="/login"
+          <button
+            onClick={handleLogout}
             className="flex w-56 items-center justify-start gap-7 rounded-large px-10 py-4 text-slate-grey hover:bg-misty-blue hover:bg-opacity-20 md:w-60 lg:w-[272px] lg:gap-8"
           >
             <Logout sx={{ fontSize: { xs: 22, sm: 24, md: 25, lg: 26 } }} />
             <span className="text-base font-semibold md:text-lg lg:text-lgx">
               Logout
             </span>
-          </Link>
+          </button>
         </div>
       </div>
     </aside>
