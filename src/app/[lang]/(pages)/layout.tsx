@@ -4,6 +4,7 @@ import { getDictionary } from '@/lib/dictionary';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { SidebarProvider } from '@/context/SidebarContext';
+import { AuthUserProvider } from '@/firebase/auth/AuthUserProvider';
 
 export const metadata: Metadata = {
   title: 'Kwiz',
@@ -22,14 +23,16 @@ export default async function RootLayout({
   const { header } = await getDictionary(params.lang);
 
   return (
-    <SidebarProvider>
-      <section className={`grid h-screen w-full md:grid-cols-[auto,1fr]`}>
-        <Sidebar menu={menu} lang={params.lang} />
-        <section className="flex w-full flex-col overflow-auto sm:px-6 md:px-7 lg:pr-8">
-          <Header header={header} />
-          {children}
+    <AuthUserProvider>
+      <SidebarProvider>
+        <section className={`grid h-screen w-full md:grid-cols-[auto,1fr]`}>
+          <Sidebar menu={menu} lang={params.lang} />
+          <section className="flex w-full flex-col overflow-auto sm:px-6 md:px-7 lg:pr-8">
+            <Header header={header} />
+            {children}
+          </section>
         </section>
-      </section>
-    </SidebarProvider>
+      </SidebarProvider>
+    </AuthUserProvider>
   );
 }
