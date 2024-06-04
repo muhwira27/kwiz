@@ -4,13 +4,16 @@ import Image from 'next/image';
 import { MenuRounded, Search, NotificationsRounded } from '@mui/icons-material';
 import Profile from '../../../public/profile.png';
 import { useSidebar } from '../../context/SidebarContext';
+import { useAuth } from '@/firebase/auth/AuthUserProvider';
 
 type Header = {
   searchQuiz: string;
 };
 
 export default function Header({ header }: { header: Header }) {
+  const auth = useAuth();
   const { toggleSidebar } = useSidebar();
+  const userData = auth.user;
 
   return (
     <header className="flex items-center justify-between px-[14px] pb-3 pt-5 sm:pr-0 md:px-0">
@@ -45,7 +48,7 @@ export default function Header({ header }: { header: Header }) {
             className="size-9 rounded-full object-cover lg:size-11"
           />
           <p className="hidden font-medium text-slate-grey sm:block lg:text-lg">
-            John Smith
+            {userData.username}
           </p>
         </div>
       </div>
