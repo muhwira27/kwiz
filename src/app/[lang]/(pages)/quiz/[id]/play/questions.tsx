@@ -3,9 +3,11 @@
 import QuestionCard from '@/components/QuestionCard';
 import { QuestionProps, QuizProps } from '@/firebase/quiz/quiz';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useLeaveConfirmation from '@/hook/useLeaveConfirmation';
 import ResultModal from '@/components/ResultModal';
+import updatePoints from '@/firebase/auth/updatePoints';
+import { useAuth } from '@/firebase/auth/AuthUserProvider';
 
 type QuestionsProps = {
   question: string;
@@ -23,8 +25,10 @@ export default function Questions({
   questions: QuestionProps[];
   props: QuestionsProps;
 }) {
+  const auth = useAuth();
   const router = useRouter();
   const { confirmationModal } = useLeaveConfirmation(true);
+  const userData = auth.user;
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -41,12 +45,19 @@ export default function Questions({
     });
   };
 
+  useEffect(() => {
+    if (quizCompleted && userData) {
+      updatePoints(userData.id!, score);
+    }
+  }, [quizCompleted, score, userData]);
+
   const handleScoreUpdate = () => {
     setScore((prevScore) => prevScore + quiz.scorePerQuestion);
   };
 
   const handleFinishQuiz = () => {
     router.push('/dashboard');
+    router.refresh();
   };
 
   const handleTryAgain = () => {
