@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import {
   FlagRounded,
@@ -6,6 +8,11 @@ import {
 } from '@mui/icons-material';
 import Profile from '../../../public/profile.png';
 import InfoBadge from '../InfoBadge';
+import { useAuth } from '@/firebase/auth/AuthUserProvider';
+import { useEffect, useState } from 'react';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '@/firebase/config';
+import getRequiredPointsForNextLevel from '@/utils/getRequiredPointsForNextLevel';
 
 type StatisticCardProps = {
   skillLevel: string;
@@ -17,6 +24,25 @@ type StatisticCardProps = {
 };
 
 export default function StatisticCard(props: StatisticCardProps) {
+  const auth = useAuth();
+  const userData = auth.user;
+  const [poinst, setPoints] = useState(userData.points!);
+  const [level, setLevel] = useState(userData.level!);
+
+  useEffect(() => {
+    if (userData?.id) {
+      const userRef = doc(db, 'user', userData.id);
+      const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          setPoints(userData.points);
+          setLevel(userData.level);
+        }
+      });
+      return () => unsubscribe();
+    }
+  }, [userData.id]);
+
   const infoBadge = [
     {
       icon: FlagRounded,
@@ -37,13 +63,6 @@ export default function StatisticCard(props: StatisticCardProps) {
 
   return (
     <div className="flex h-max w-full justify-center gap-4 sm:gap-5 md:gap-7 lg:gap-9">
-      {/* <Image
-        src={Profile}
-        alt="Pofile"
-        priority
-        className="hidden h-auto w-72 rounded-large object-cover min-[860px]:block md:hidden min-[1200px]:block lg:h-52 lg:w-[380px]"
-      /> */}
-
       <div className="relative hidden h-auto w-72 rounded-large min-[860px]:block md:hidden min-[1200px]:block lg:h-56 lg:w-[350px]">
         <Image
           src={Profile}
@@ -58,16 +77,16 @@ export default function StatisticCard(props: StatisticCardProps) {
       <div className="flex grow flex-col justify-center gap-5 md:gap-6">
         <div className="flex flex-col items-start">
           <p className="text-lgx font-bold text-slate-grey sm:text-xl md:text-[26px] lg:text-xxl">
-            John Smith
+            {userData.name}
           </p>
           <p className="text-sm font-medium text-slate-grey sm:text-base md:text-lg lg:text-lg">
-            {props.skillLevel}: 24
+            {props.skillLevel}: {level}
           </p>
         </div>
 
         <div className="flex flex-col items-start gap-2">
           <p className="text-xs font-medium text-slate-grey md:text-sm">
-            {props.points}: 70 / 100
+            {props.points}: {poinst} / {getRequiredPointsForNextLevel(level)}
           </p>
           <div className="flex h-3 w-full items-start rounded-large bg-[#F5F5F5]">
             <div className="h-full w-[70%] rounded-large bg-[#C4C4C4]"></div>
