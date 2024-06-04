@@ -13,7 +13,6 @@ export default async function Quiz({
   const { quiz } = await getDictionary(lang);
 
   const quizData = await getQuizById(id, lang);
-  console.log(quizData);
   return (
     <main
       className={`mb-3 mt-2 flex ${
