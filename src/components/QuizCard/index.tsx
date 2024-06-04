@@ -1,11 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { QuizProps } from '@/firebase/quiz/quiz';
 import { Bookmark, AccessTimeFilled } from '@mui/icons-material';
+import { useAuth } from '@/firebase/auth/AuthUserProvider';
+import saveQuiz from '@/firebase/quiz/saveQuiz';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 
-type QuizCard = {
+type QuizCardProps = {
   question: string;
   minutes: string;
   plays: string;
@@ -16,12 +20,33 @@ export default function QuizCard({
   quizCard,
 }: {
   quiz: QuizProps;
-  quizCard: QuizCard;
+  quizCard: QuizCardProps;
 }) {
+  const auth = useAuth();
+  const userData = auth.user;
   const [isSaved, setIsSaved] = useState(false);
 
-  const handleSave = () => {
-    setIsSaved(!isSaved);
+  useEffect(() => {
+    if (userData?.id) {
+      const userRef = doc(db, 'user', userData.id);
+      const unsubscribe = onSnapshot(userRef, (userDoc) => {
+        if (userDoc.exists() && userDoc.data().savedQuizzes) {
+          const savedQuizzes = userDoc.data().savedQuizzes;
+          setIsSaved(savedQuizzes.includes(quiz.id));
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [userData, quiz.id]);
+
+  const handleSave = async (event: any) => {
+    event.preventDefault();
+    const newSavedStatus = !isSaved;
+    setIsSaved(newSavedStatus);
+    await saveQuiz(userData.id!, quiz.id, newSavedStatus);
   };
 
   return (
@@ -46,13 +71,14 @@ export default function QuizCard({
 
       <section className="flex items-center justify-between text-sm font-semibold text-slate-grey md:text-base">
         <h5>{quiz.name}</h5>
-        <Bookmark
-          sx={{ fontSize: { xs: 22, sm: 22, md: 24, lg: 24 } }}
-          onClick={handleSave}
-          className={`cursor-pointer ${
-            isSaved ? 'text-blue-500' : 'text-gray-400'
-          }`}
-        />
+        <div onClick={handleSave}>
+          <Bookmark
+            sx={{ fontSize: { xs: 22, sm: 22, md: 24, lg: 24 } }}
+            className={`z-50 cursor-pointer ${
+              isSaved ? 'text-blue-500' : 'text-gray-400'
+            }`}
+          />
+        </div>
       </section>
 
       <section className="flex items-center justify-between text-[11px] text-slate-grey md:text-xs">
@@ -60,13 +86,11 @@ export default function QuizCard({
           <AccessTimeFilled
             sx={{ fontSize: { xs: 22, sm: 22, md: 24, lg: 24 } }}
           />
-
           <p>
             {Math.floor((quiz.timePerQuestion * quiz.numberOfQuestions) / 60)}{' '}
             {quizCard.minutes}
           </p>
         </div>
-
         <div className="rounded-2xl bg-dusk-blue px-4 py-0.5 text-white">
           <p>
             {quiz.numberOfPlayers} {quizCard.plays}
