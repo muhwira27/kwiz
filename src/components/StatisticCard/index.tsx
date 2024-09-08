@@ -26,8 +26,11 @@ type StatisticCardProps = {
 export default function StatisticCard(props: StatisticCardProps) {
   const auth = useAuth();
   const userData = auth.user;
-  const [poinst, setPoints] = useState(userData.points!);
+  const [points, setPoints] = useState(userData.points!);
   const [level, setLevel] = useState(userData.level!);
+
+  const requiredPoints = getRequiredPointsForNextLevel(level);
+  const progressPercentage = Math.min((points / requiredPoints) * 100, 100);
 
   useEffect(() => {
     if (userData?.id) {
@@ -86,10 +89,13 @@ export default function StatisticCard(props: StatisticCardProps) {
 
         <div className="flex flex-col items-start gap-2">
           <p className="text-xs font-medium text-slate-grey md:text-sm">
-            {props.points}: {poinst} / {getRequiredPointsForNextLevel(level)}
+            {props.points}: {points} / {getRequiredPointsForNextLevel(level)}
           </p>
           <div className="flex h-3 w-full items-start rounded-large bg-[#F5F5F5]">
-            <div className="h-full w-[70%] rounded-large bg-[#C4C4C4]"></div>
+            <div
+              className="h-full rounded-large bg-[#C4C4C4]"
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
           </div>
         </div>
 
