@@ -122,7 +122,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
                   onClick={handleNavLinkClick}
                   className={`flex w-56 items-center justify-start gap-7 rounded-large px-10 py-4 text-slate-grey md:w-60 lg:w-[272px] lg:gap-8
                     ${
-                      pathname == item.href
+                      pathname.includes(item.href)
                         ? 'pointer-events-none bg-misty-blue text-white'
                         : 'hover:bg-misty-blue hover:bg-opacity-20'
                     }
