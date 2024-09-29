@@ -35,11 +35,15 @@ export default async function Dashboard({
         <h5 className="text-lg font-bold text-slate-grey md:text-xxl">
           {dashboard.title1}
         </h5>
-        <div className="flex h-fit w-full gap-3 overflow-x-auto rounded-2xl px-2 py-4 scrollbar-hide">
+        <div className="custom-scrollbar flex h-fit w-full gap-3 overflow-x-auto rounded-2xl px-2 py-4">
           {quizData &&
             quizData.map((quiz) => {
               return (
-                <Link key={quiz.id} href={`quiz/${quiz.id}`}>
+                <Link
+                  key={quiz.id}
+                  href={`quiz/${quiz.id}`}
+                  className="flex-grow"
+                >
                   <QuizCard quiz={quiz} quizCard={quizCard} />
                 </Link>
               );
