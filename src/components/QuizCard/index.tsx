@@ -50,7 +50,7 @@ export default function QuizCard({
   };
 
   return (
-    <section className="flex flex-col gap-4 rounded-2xl px-4 py-3 shadow-custom1 md:w-60">
+    <section className="flex h-full flex-col gap-4 rounded-2xl px-4 py-3 shadow-custom1 md:w-60">
       <section className="flex justify-center">
         <div className="relative h-40 w-48 overflow-hidden rounded-2xl border-b-4 border-r-2 border-dusk-blue md:h-44 md:w-52">
           <Image
