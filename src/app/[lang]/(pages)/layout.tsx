@@ -28,7 +28,7 @@ export default async function RootLayout({
         <section className={`grid h-screen w-full md:grid-cols-[auto,1fr]`}>
           <Sidebar menu={menu} lang={params.lang} />
           <section className="flex w-full flex-col overflow-auto sm:px-6 md:px-7 lg:pr-8">
-            <Header header={header} />
+            <Header lang={params.lang} header={header} />
             {children}
           </section>
         </section>
