@@ -1,5 +1,6 @@
 'use client';
 
+import { Timestamp } from 'firebase/firestore';
 import QuestionCard from '@/components/QuestionCard';
 import { QuestionProps, QuizProps } from '@/firebase/quiz/quiz';
 import { useRouter } from 'next/navigation';
@@ -8,6 +9,8 @@ import useLeaveConfirmation from '@/hook/useLeaveConfirmation';
 import ResultModal from '@/components/ResultModal';
 import updatePoints from '@/firebase/auth/updatePoints';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
+import updateHistoryQuizzes from '@/firebase/auth/updateHistoryQuizzes';
+import { getHistoryQuizzes } from '@/firebase/auth/getHistoryQuizzes';
 
 type QuestionsProps = {
   question: string;
@@ -34,6 +37,9 @@ export default function Questions({
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
 
+  const [startTime, setStartTime] = useState<Timestamp | null>(null);
+  const [endTime, setEndTime] = useState<Timestamp | null>(null);
+
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < questions.length - 1) {
@@ -46,8 +52,15 @@ export default function Questions({
   };
 
   useEffect(() => {
+    if (!startTime) {
+      setStartTime(Timestamp.now());
+    }
+  }, [startTime]);
+
+  useEffect(() => {
     if (quizCompleted && userData) {
       updatePoints(userData.id!, score);
+      setEndTime(Timestamp.now());
     }
   }, [quizCompleted, score, userData]);
 
@@ -55,12 +68,26 @@ export default function Questions({
     setScore((prevScore) => prevScore + quiz.scorePerQuestion);
   };
 
-  const handleFinishQuiz = () => {
+  const handleFinishQuiz = async () => {
     router.push('/dashboard');
+    await updateHistoryQuizzes(
+      userData.id!,
+      quiz.id,
+      score,
+      startTime!,
+      endTime!
+    );
     router.refresh();
   };
 
-  const handleTryAgain = () => {
+  const handleTryAgain = async () => {
+    await updateHistoryQuizzes(
+      userData.id!,
+      quiz.id,
+      score,
+      startTime!,
+      endTime!
+    );
     router.refresh();
     setQuizCompleted(false);
     setCurrentQuestionIndex(0);
