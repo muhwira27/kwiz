@@ -18,9 +18,9 @@ export interface UserType {
 
 export interface HistoryQuizzes {
   id: string;
-  time: number;
-  correcAnswer: number;
-  dateAttempt: Timestamp
+  score: number;
+  startTime: Timestamp;
+  endTime: Timestamp
 }
 
 export const userConverter = {
@@ -35,9 +35,9 @@ export const userConverter = {
       savedQuizzes: user.savedQuizzes,
       historyQuizzes: user.historyQuizzes?.map(hq => ({
         id: hq.id,
-        time: hq.time,
-        correcAnswer: hq.correcAnswer,
-        dateAttempt: hq.dateAttempt
+        score: hq.score,
+        startTime: hq.startTime,
+        endTime: hq.endTime
       }))
     };
   },
