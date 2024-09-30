@@ -19,23 +19,50 @@ function getLocale(request: NextRequest): string | undefined {
   return locale;
 }
 
-const protectedRoutes = ["/", "/id", "/en", "/dashboard", "/category", "/en/dashboard", "/en/category", "/id/dashboard", "/id/category"];
-const authRoutes = ["/", "/id", "/en", "/signup", "/login", "/en/signup", "/en/login", "/id/signup", "/id/login"];
+const protectedRoutes = [
+  '/',
+  '/id',
+  '/en',
+  '/dashboard',
+  '/category',
+  '/en/dashboard',
+  '/en/category',
+  '/en/saved',
+  '/en/settings',
+  '/en/settings/quiz-history',
+  '/id/dashboard',
+  '/id/category',
+  '/id/saved',
+  '/id/settings',
+  '/id/settings/quiz-history',
+];
+
+const authRoutes = [
+  '/',
+  '/id',
+  '/en',
+  '/signup',
+  '/login',
+  '/en/signup',
+  '/en/login',
+  '/id/signup',
+  '/id/login',
+];
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const session = await getSession(request);
 
   if (session && authRoutes.includes(pathname)) {
-    const absoluteURL = new URL("/dashboard", request.nextUrl.origin);
+    const absoluteURL = new URL('/dashboard', request.nextUrl.origin);
     return NextResponse.redirect(absoluteURL.toString());
   }
 
-  if(!session && protectedRoutes.includes(pathname)) {
-    const absoluteURL = new URL("/login", request.nextUrl.origin);
+  if (!session && protectedRoutes.includes(pathname)) {
+    const absoluteURL = new URL('/login', request.nextUrl.origin);
     return NextResponse.redirect(absoluteURL.toString());
   }
-  
+
   const pathnameIsMissingLocale = i18n.locales.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
