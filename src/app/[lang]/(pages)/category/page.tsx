@@ -24,7 +24,7 @@ export default async function Category({
         {categoryData &&
           categoryData.map((category) => {
             return (
-              <Link key={category.id} href={`category/${category.id}`}>
+              <Link key={category.id} href={`/${params.lang}/category/${category.id}`}>
                 <CategoryCard category={category} />
               </Link>
             );

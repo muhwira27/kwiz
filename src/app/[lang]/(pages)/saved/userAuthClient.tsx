@@ -43,7 +43,7 @@ export default function UserAuthClient({
     <section>
       <div className="flex h-fit w-full gap-3 overflow-x-auto rounded-2xl px-2 py-4 scrollbar-hide">
         {savedQuizzes.map((quiz) => (
-          <Link key={quiz.id} href={`quiz/${quiz.id}`}>
+          <Link key={quiz.id} href={`/${lang}/quiz/${quiz.id}`}>
             <QuizCardNoSSR quiz={quiz} quizCard={quizCard} />
           </Link>
         ))}

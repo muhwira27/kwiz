@@ -46,7 +46,7 @@ export default async function Dashboard({
               return (
                 <Link
                   key={quiz.id}
-                  href={`quiz/${quiz.id}`}
+                  href={`/${params.lang}/quiz/${quiz.id}`}
                   className="flex-grow"
                 >
                   <QuizCardNoSSR quiz={quiz} quizCard={quizCard} />
@@ -59,7 +59,7 @@ export default async function Dashboard({
       <section className="flex w-fit flex-col gap-6">
         <section className="flex items-center justify-between text-slate-grey">
           <h5 className="text-lg font-bold md:text-xxl">{dashboard.title2}</h5>
-          <Link href="/category">
+          <Link href={`/${params.lang}/category`}>
             <p className="text-sm md:text-base">{dashboard.viewAll}</p>
           </Link>
         </section>
@@ -68,7 +68,7 @@ export default async function Dashboard({
           {categoryData &&
             categoryData.map((category) => {
               return (
-                <Link key={category.id} href={`category/${category.id}`}>
+                <Link key={category.id} href={`/${params.lang}/category/${category.id}`}>
                   <CategoryCard category={category} />
                 </Link>
               );
