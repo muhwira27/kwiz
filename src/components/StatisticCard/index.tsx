@@ -26,8 +26,8 @@ type StatisticCardProps = {
 export default function StatisticCard(props: StatisticCardProps) {
   const auth = useAuth();
   const userData = auth.user;
-  const [points, setPoints] = useState(userData.points!);
-  const [level, setLevel] = useState(userData.level!);
+  const [points, setPoints] = useState<number>(userData.points ?? 0);
+  const [level, setLevel] = useState<number>(userData.level ?? 1);
 
   const requiredPoints = getRequiredPointsForNextLevel(level);
   const progressPercentage = Math.min((points / requiredPoints) * 100, 100);
