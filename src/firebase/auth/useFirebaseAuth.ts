@@ -25,7 +25,6 @@ import {
 } from 'firebase/firestore';
 import { UserType, userConverter } from './user';
 import { FirebaseError } from 'firebase/app';
-import { setSession, deleteSession } from '@/session/session';
 
 export function useFirebaseAuth() {
   const [user, setUser] = useState<UserType>({
@@ -43,16 +42,30 @@ export function useFirebaseAuth() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userData = await getUserData(user.uid);
-        setUser({
-          id: userData!.id,
-          name: userData!.name,
-          email: userData!.email,
-          username: userData!.username,
-          level: userData!.level,
-          points: userData!.points,
-          savedQuizzes: userData!.savedQuizzes,
-          historyQuizzes: userData!.historyQuizzes,
-        });
+        if (userData) {
+          setUser({
+            id: userData.id,
+            name: userData.name,
+            email: userData.email,
+            username: userData.username,
+            level: userData.level,
+            points: userData.points,
+            savedQuizzes: userData.savedQuizzes ?? [],
+            historyQuizzes: userData.historyQuizzes ?? [],
+          });
+        } else {
+          // Fallback when user doc isn't created yet (e.g., first Google login)
+          setUser({
+            id: user.uid,
+            name: user.displayName ?? null,
+            email: user.email ?? null,
+            username: user.displayName ?? null,
+            level: 0,
+            points: 0,
+            savedQuizzes: [],
+            historyQuizzes: [],
+          });
+        }
       } else {
         setUser({
           id: null,
@@ -115,7 +128,7 @@ export function useFirebaseAuth() {
       const sessionData = {
         email: credential.user.email,
       };
-      await setSession(sessionData);
+      await setSessionCookie(sessionData);
     } catch (e) {
       if (e instanceof FirebaseError) {
         if (e.code == 'auth/email-already-in-use') {
@@ -143,7 +156,7 @@ export function useFirebaseAuth() {
       const sessionData = {
         email: email,
       };
-      await setSession(sessionData);
+      await setSessionCookie(sessionData);
     } catch (e) {
       console.log(e);
       if (e instanceof FirebaseError) {
@@ -178,14 +191,14 @@ export function useFirebaseAuth() {
           historyQuizzes: [] as string[],
         } as unknown as UserType;
         await setDoc(doc(db, 'user', newUserData.id!), newUserData);
-        await sendEmailVerification(user);
+        // Google accounts are typically already verified; ignore verification here
       }
 
       // create session
       const sessionData = {
         email: user.email,
       };
-      await setSession(sessionData);
+      await setSessionCookie(sessionData);
 
       return result;
     } catch (e) {
@@ -204,7 +217,7 @@ export function useFirebaseAuth() {
       savedQuizzes: [],
       historyQuizzes: [],
     });
-    await deleteSession();
+    await clearSessionCookie();
     return await signOut(auth);
   };
 
@@ -260,3 +273,22 @@ export function useFirebaseAuth() {
     sendResetPasswordEmail,
   };
 }
+  const setSessionCookie = async (data: any) => {
+    try {
+      await fetch('/api/session/set', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const clearSessionCookie = async () => {
+    try {
+      await fetch('/api/session/delete', { method: 'POST' });
+    } catch (e) {
+      console.log(e);
+    }
+  };
