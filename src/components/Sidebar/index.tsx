@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
 import Logo from '../../../public/logo.svg';
@@ -17,6 +18,7 @@ import {
 import { useSidebar } from '../../context/SidebarContext';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import { useRouter } from 'next/navigation';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 type Menu = {
   dashboard: string;
@@ -65,12 +67,23 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
     }
   };
 
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleLogout = async () => {
     try {
+      setLoggingOut(true);
       await auth.logOut();
       router.push(`/${lang}/login`);
     } catch (error) {
       console.log(error);
+    } finally {
+      // keep spinner briefly to cover navigation
+      setTimeout(() => setLoggingOut(false), 800);
     }
   };
 
@@ -93,7 +106,15 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
   }, [isScreenMd, isSidebarVisible, toggleSidebar]);
 
   return (
-    <aside
+    <>
+      {mounted && loggingOut &&
+        createPortal(
+          <div className="fixed inset-0 z-[1000]">
+            <LoadingSpinner />
+          </div>,
+          document.body
+        )}
+      <aside
       ref={sidebarRef}
       className={`${
         isSidebarVisible ? ' flex translate-x-0' : 'flex -translate-x-full'
@@ -155,5 +176,6 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
         </div>
       </div>
     </aside>
+    </>
   );
 }
