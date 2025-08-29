@@ -4,7 +4,8 @@ import { Locale } from '@/i18n.config';
 import { getDictionary } from '@/lib/dictionary';
 import { getQuizByCategory } from '@/firebase/quiz/getQuizByCategory';
 import { getCategoryById } from '@/firebase/category/getCategoryById';
-import QuizCard from '@/components/QuizCard';
+import dynamic from 'next/dynamic';
+const QuizCardNoSSR = dynamic(() => import('@/components/QuizCard'), { ssr: false });
 import { ArrowBack } from '@mui/icons-material';
 
 export default async function Category({
@@ -53,7 +54,7 @@ export default async function Category({
               quizData.map((quiz) => {
                 return (
                   <Link key={quiz.id} href={`/${lang}/quiz/${quiz.id}`}>
-                    <QuizCard key={quiz.id} quiz={quiz} quizCard={quizCard} />
+                    <QuizCardNoSSR key={quiz.id} quiz={quiz} quizCard={quizCard} />
                   </Link>
                 );
               })}
