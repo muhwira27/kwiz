@@ -5,9 +5,11 @@ import { useState, ChangeEvent } from 'react';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import Learning from '../../../../../public/images/Learning-bro.svg';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 export default function ForgotPassword() {
   const auth = useAuth();
+  const { lang } = useParams() as { lang: string };
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
@@ -100,7 +102,7 @@ export default function ForgotPassword() {
               {loading ? 'Loading...' : 'Reset Password'}
             </button>
             <Link
-              href="/login"
+              href={`/${lang}/login`}
               type="submit"
               className="mt-2 flex h-12 w-full items-center justify-center rounded-full bg-soft-white font-semibold text-charcoal shadow-custom1"
             >

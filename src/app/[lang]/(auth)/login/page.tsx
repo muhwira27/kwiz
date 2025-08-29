@@ -4,13 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, ChangeEvent } from 'react';
 import { Google, Visibility, VisibilityOff } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import Learning from '../../../../../public/images/Learning-bro.svg';
 
 export default function Login() {
   const auth = useAuth();
   const router = useRouter();
+  const { lang } = useParams() as { lang: string };
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,7 +53,7 @@ export default function Login() {
     try {
       const result = await auth.logIn(email, password);
       if (result == undefined) {
-        router.push('/dashboard');
+        router.push(`/${lang}/dashboard`);
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -67,7 +68,7 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     try {
       await auth.logInWithGoogle();
-      router.push('/dashboard');
+      router.push(`/${lang}/dashboard`);
     } catch (e) {
       console.log(e);
     }
@@ -154,7 +155,7 @@ export default function Login() {
                 <p className="ml-3 w-full text-xs text-red-500">{loginError}</p>
               ) : null}
               <Link
-                href="/forgot-password"
+                href={`/${lang}/forgot-password`}
                 className="w-full text-right text-sm font-medium text-slate-grey"
               >
                 Forgot Password?
@@ -188,7 +189,7 @@ export default function Login() {
         </form>
         <p className="pt-2 text-sm font-medium text-slate-grey">
           {'Don’t have an account? '}
-          <Link href="/signup" className="text-[#007AFF]">
+          <Link href={`/${lang}/signup`} className="text-[#007AFF]">
             Sign Up now
           </Link>
         </p>

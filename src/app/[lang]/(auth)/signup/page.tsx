@@ -4,13 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Google, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState, ChangeEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import Learning from '../../../../../public/images/Learning-bro.svg';
 
 export default function SignUp() {
   const auth = useAuth();
   const router = useRouter();
+  const { lang } = useParams() as { lang: string };
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -63,7 +64,7 @@ export default function SignUp() {
     try {
       const result = await auth.signUp(username, email, password);
       if (result == undefined) {
-        router.push('/dashboard');
+        router.push(`/${lang}/dashboard`);
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -78,7 +79,7 @@ export default function SignUp() {
   const handleGoogleSignin = async () => {
     try {
       await auth.logInWithGoogle();
-      router.push('/dashboard');
+      router.push(`/${lang}/dashboard`);
     } catch (e) {
       console.log(e);
     }
@@ -209,7 +210,7 @@ export default function SignUp() {
         </form>
         <p className="pt-2 text-sm font-medium text-slate-grey">
           Already have an account?{' '}
-          <Link href="/login" className="text-[#007AFF]">
+          <Link href={`/${lang}/login`} className="text-[#007AFF]">
             Login now
           </Link>
         </p>
