@@ -1,9 +1,8 @@
 import { SignJWT, jwtVerify } from "jose";
 
-const secretKey = 'zx007'; 
-console.log(secretKey)
+const secretKey = process.env.SESSION_SECRET;
 if (!secretKey) {
-  throw new Error("Missing secret key for encryption");
+  throw new Error("Missing SESSION_SECRET environment variable");
 }
 const key = new TextEncoder().encode(secretKey);
 
@@ -15,9 +14,14 @@ export async function encrypt(payload: any): Promise<string> {
     .sign(key);
 }
 
-export async function decrypt(input: string): Promise<any> {
-  const { payload } = await jwtVerify(input, key, {
-    algorithms: ["HS256"],
-  });
-  return payload;
+export async function decrypt(input: string): Promise<any | null> {
+  try {
+    const { payload } = await jwtVerify(input, key, {
+      algorithms: ["HS256"],
+    });
+    return payload;
+  } catch (err) {
+    // Invalid/expired token or key mismatch
+    return null;
+  }
 }

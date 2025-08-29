@@ -10,13 +10,28 @@ export async function setSession(userData: any) {
   const session = await encrypt({ userData, expires });
 
   // Save the session in a cookie
-  const response = NextResponse.next();
-  cookies().set("session", session, { expires, httpOnly: true });}
+  cookies().set({
+    name: "session",
+    value: session,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    expires,
+    path: '/',
+  });
+}
 
 export async function deleteSession(){
   // Destroy the session
-  const response = NextResponse.next();
-  cookies().set("session", "", { expires: new Date(0) });
+  cookies().set({
+    name: "session",
+    value: "",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    expires: new Date(0),
+    path: '/',
+  });
 }
 
 export async function getSession(request: NextRequest) {
@@ -31,6 +46,20 @@ export async function updateSession(request: NextRequest) {
 
   // Refresh the session so it doesn't expire
   const parsed = await decrypt(session);
+  if (!parsed) {
+    // invalid token; clear cookie
+    const res = NextResponse.next();
+    res.cookies.set({
+      name: "session",
+      value: "",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      expires: new Date(0),
+      path: '/',
+    });
+    return res;
+  }
   parsed.expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
   const res = NextResponse.next();
   res.cookies.set({
