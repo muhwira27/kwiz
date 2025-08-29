@@ -17,7 +17,7 @@ export interface UserType {
 }
 
 export interface HistoryQuizzes {
-  id: string;
+  quizId: string;
   score: number;
   startTime: Timestamp;
   endTime: Timestamp
@@ -33,12 +33,12 @@ export const userConverter = {
       level: user.level,
       points: user.points,
       savedQuizzes: user.savedQuizzes,
-      historyQuizzes: user.historyQuizzes?.map(hq => ({
-        id: hq.id,
+      historyQuizzes: user.historyQuizzes?.map((hq) => ({
+        quizId: hq.quizId,
         score: hq.score,
         startTime: hq.startTime,
-        endTime: hq.endTime
-      }))
+        endTime: hq.endTime,
+      })),
     };
   },
   fromFirestore: (
@@ -54,12 +54,13 @@ export const userConverter = {
       level: data?.level ?? null,
       points: data?.points ?? null,
       savedQuizzes: data?.savedQuizzes ?? null,
-      historyQuizzes: data?.historyQuizzes?.map((hq: any) => ({
-        id: hq.id,
-        time: hq.time,
-        correcAnswer: hq.correcAnswer,
-        dateAttempt: hq.dateAttempt
-      })) ?? null
+      historyQuizzes:
+        data?.historyQuizzes?.map((hq: any) => ({
+          quizId: hq.quizId ?? hq.id, // support legacy 'id' field
+          score: hq.score,
+          startTime: hq.startTime,
+          endTime: hq.endTime,
+        })) ?? null,
     } as UserType;
   },
 };
