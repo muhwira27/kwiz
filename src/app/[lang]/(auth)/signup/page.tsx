@@ -76,7 +76,10 @@ export default function SignUp() {
     }
   };
 
-  const handleGoogleSignin = async () => {
+  const handleGoogleSignin = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
     try {
       await auth.logInWithGoogle();
       router.push(`/${lang}/dashboard`);
@@ -199,6 +202,7 @@ export default function SignUp() {
               <div className="h-px w-full border border-[#F5F5F5]"></div>
             </div>
             <button
+              type="button"
               className="flex h-14 w-full items-center justify-center gap-6 rounded-full bg-soft-white font-semibold text-charcoal shadow-custom1 md:pl-0"
               onClick={handleGoogleSignin}
               disabled={loading}
