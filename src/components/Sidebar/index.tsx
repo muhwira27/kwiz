@@ -66,7 +66,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
   const handleLogout = async () => {
     try {
       await auth.logOut();
-      router.push('/login');
+      router.push(`/${lang}/login`);
     } catch (error) {
       console.log(error);
     }
