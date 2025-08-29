@@ -3,10 +3,15 @@ import { Locale } from '@/i18n.config';
 import { getDictionary } from '@/lib/dictionary';
 import { getPopularQuiz } from '@/firebase/quiz/getPopularQuiz';
 import getFeaturedCategory from '@/firebase/category/getFeaturedCategory';
-
-import QuizCard from '@/components/QuizCard';
+import dynamic from 'next/dynamic';
+const QuizCardNoSSR = dynamic(() => import('@/components/QuizCard'), {
+  ssr: false,
+});
 import CategoryCard from '@/components/CategoryCard';
-import StatisticCard from '@/components/StatisticCard';
+
+const StatisticCardNoSSR = dynamic(() => import('@/components/StatisticCard'), {
+  ssr: false,
+});
 
 export default async function Dashboard({
   params,
@@ -21,7 +26,7 @@ export default async function Dashboard({
   return (
     <main className="mb-3 mt-2 flex h-fit w-full flex-col gap-10 rounded-large bg-white px-6 py-6 shadow-custom1 sm:mt-3 md:mb-5 lg:px-9 lg:py-10">
       <section>
-        <StatisticCard
+        <StatisticCardNoSSR
           skillLevel={dashboard.skillLevel}
           points={dashboard.points}
           quizFinished={dashboard.quizFinished}
@@ -44,7 +49,7 @@ export default async function Dashboard({
                   href={`quiz/${quiz.id}`}
                   className="flex-grow"
                 >
-                  <QuizCard quiz={quiz} quizCard={quizCard} />
+                  <QuizCardNoSSR quiz={quiz} quizCard={quizCard} />
                 </Link>
               );
             })}
