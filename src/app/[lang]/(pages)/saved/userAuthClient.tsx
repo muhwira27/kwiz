@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
-import QuizCard from '@/components/QuizCard';
+import dynamic from 'next/dynamic';
+const QuizCardNoSSR = dynamic(() => import('@/components/QuizCard'), { ssr: false });
 import { getSavedQuizzes } from '@/firebase/auth/getSavedQuizzes';
 import { Locale } from '@/i18n.config';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -43,7 +44,7 @@ export default function UserAuthClient({
       <div className="flex h-fit w-full gap-3 overflow-x-auto rounded-2xl px-2 py-4 scrollbar-hide">
         {savedQuizzes.map((quiz) => (
           <Link key={quiz.id} href={`quiz/${quiz.id}`}>
-            <QuizCard quiz={quiz} quizCard={quizCard} />
+            <QuizCardNoSSR quiz={quiz} quizCard={quizCard} />
           </Link>
         ))}
       </div>
