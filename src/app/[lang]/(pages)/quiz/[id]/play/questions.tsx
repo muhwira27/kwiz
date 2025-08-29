@@ -3,7 +3,7 @@
 import { Timestamp } from 'firebase/firestore';
 import QuestionCard from '@/components/QuestionCard';
 import { QuestionProps, QuizProps } from '@/firebase/quiz/quiz';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import useLeaveConfirmation from '@/hook/useLeaveConfirmation';
 import ResultModal from '@/components/ResultModal';
@@ -30,6 +30,7 @@ export default function Questions({
 }) {
   const auth = useAuth();
   const router = useRouter();
+  const { lang } = useParams() as { lang: string };
   const { confirmationModal } = useLeaveConfirmation(true);
   const userData = auth.user;
 
@@ -69,7 +70,7 @@ export default function Questions({
   };
 
   const handleFinishQuiz = async () => {
-    router.push('/dashboard');
+    router.push(`/${lang}/dashboard`);
     await updateHistoryQuizzes(
       userData.id!,
       quiz.id,
