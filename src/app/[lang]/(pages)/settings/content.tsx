@@ -1,4 +1,8 @@
+'use client';
+
 import React from 'react';
+import { useAuth } from '@/firebase/auth/AuthUserProvider';
+import { useParams } from 'next/navigation';
 import {
   AccountCircle,
   ArrowForwardIosRounded,
@@ -6,6 +10,11 @@ import {
 } from '@mui/icons-material';
 
 export default function Content() {
+  const auth = useAuth();
+  const user = auth.user;
+  const { lang } = useParams() as { lang: string };
+  const languageName = lang === 'en' ? 'English' : 'Indonesia';
+
   return (
     <div className="mt-2 flex flex-col gap-2 md:flex-row">
       <div className="mb-3 flex h-fit w-full flex-col gap-2 rounded-large bg-white px-6 py-6 shadow-custom1 sm:mt-3 md:mb-5 lg:px-9 lg:py-10">
@@ -17,7 +26,7 @@ export default function Content() {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2 text-base">
               <p className="font-semibold text-gray-800">Username</p>
-              <p className="text-gray-400">John Smith</p>
+              <p className="text-gray-400">{user.username ?? '-'}</p>
             </div>
             <ArrowForwardIosRounded
               sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
@@ -27,7 +36,7 @@ export default function Content() {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2 text-base">
               <p className="font-semibold text-gray-800">Full Name</p>
-              <p className="text-gray-400">John Smith</p>
+              <p className="text-gray-400">{user.name ?? '-'}</p>
             </div>
             <ArrowForwardIosRounded
               sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
@@ -37,7 +46,7 @@ export default function Content() {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2 text-base">
               <p className="font-semibold text-gray-800">Email</p>
-              <p className="text-gray-400">johnsmith@example.com</p>
+              <p className="text-gray-400">{user.email ?? '-'}</p>
             </div>
             <ArrowForwardIosRounded
               sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
@@ -47,7 +56,7 @@ export default function Content() {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2 text-base">
               <p className="font-semibold text-gray-800">Language</p>
-              <p className="text-gray-400">English</p>
+              <p className="text-gray-400">{languageName}</p>
             </div>
             <ArrowForwardIosRounded
               sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
