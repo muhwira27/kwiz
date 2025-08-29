@@ -55,7 +55,9 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
     },
   ];
 
-  const isScreenMd = window.matchMedia('(max-width: 960px)').matches;
+  const isScreenMd =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 960px)').matches;
 
   const handleNavLinkClick = () => {
     if (isScreenMd && isSidebarVisible) {
