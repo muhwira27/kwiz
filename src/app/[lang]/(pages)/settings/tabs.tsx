@@ -22,7 +22,7 @@ export default function Tabs({
               ? 'rounded-b-sm border-b-4 border-charcoal text-charcoal'
               : 'text-misty-blue'
           }`}
-          href={'/settings'}
+          href={`/${lang}/settings`}
         >
           Settings
         </Link>
@@ -32,7 +32,7 @@ export default function Tabs({
               ? 'rounded-b-sm border-b-4 border-charcoal text-charcoal'
               : 'text-misty-blue'
           }`}
-          href={'/settings/quiz-history'}
+          href={`/${lang}/settings/quiz-history`}
         >
           Quiz History
         </Link>
