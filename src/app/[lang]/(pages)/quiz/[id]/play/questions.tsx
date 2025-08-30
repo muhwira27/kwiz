@@ -114,6 +114,7 @@ export default function Questions({
       {quizCompleted && (
         <ResultModal
           score={score}
+          maxScore={quiz.scorePerQuestion * quiz.numberOfQuestions}
           onTryAgain={handleTryAgain}
           onFinish={handleFinishQuiz}
         />

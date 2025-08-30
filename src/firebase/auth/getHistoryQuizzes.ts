@@ -28,22 +28,34 @@ export async function getHistoryQuizzes(
   for (const historyQuiz of historyQuizzes) {
     const { quizId, score, startTime, endTime } = historyQuiz;
 
-    // Get the quiz data based on the quizId
-    const quizDocRef = doc(db, 'quiz', quizId);
-    const quizDoc = await getDoc(quizDocRef);
-    if (quizDoc.exists()) {
-      const quizData = quizDoc.data();
-      const quizName = lang === 'en' ? quizData.name.en : quizData.name.id;
-      const numberOfQuestions = quizData.numberOfQuestions;
-      const scorePerQuestion = quizData.scorePerQuestion;
+    // Prefer stored metadata when available
+    let numberOfQuestions = historyQuiz.numberOfQuestions as number | undefined;
+    let scorePerQuestion = historyQuiz.scorePerQuestion as number | undefined;
+    let quizName: string | undefined = undefined;
 
-      // Calculate the duration in minutes (endTime - startTime)
-      const start = (startTime as Timestamp).toDate();
-      const end = (endTime as Timestamp).toDate();
-      const duration = (end.getTime() - start.getTime()) / 60000; // Convert ms to minutes
+    // Fallback: fetch quiz doc only for missing fields (name always needed)
+    if (!numberOfQuestions || !scorePerQuestion || !quizName) {
+      const quizDocRef = doc(db, 'quiz', quizId);
+      const quizDoc = await getDoc(quizDocRef);
+      if (quizDoc.exists()) {
+        const quizData = quizDoc.data();
+        quizName = lang === 'en' ? quizData.name.en : quizData.name.id;
+        numberOfQuestions = numberOfQuestions ?? quizData.numberOfQuestions;
+        scorePerQuestion = scorePerQuestion ?? quizData.scorePerQuestion;
+      } else {
+        // Skip if quiz doc missing and we cannot build a row
+        continue;
+      }
+    }
 
-      // Format the date for output based on language
-      const dateAttempt = lang === 'en'
+    // Calculate the duration in minutes (endTime - startTime)
+    const start = (startTime as Timestamp).toDate();
+    const end = (endTime as Timestamp).toDate();
+    const duration = (end.getTime() - start.getTime()) / 60000; // Convert ms to minutes
+
+    // Format the date for output based on language
+    const dateAttempt =
+      lang === 'en'
         ? start
             .toLocaleString('en-GB', {
               day: '2-digit',
@@ -63,19 +75,18 @@ export async function getHistoryQuizzes(
             })
             .replace(',', '');
 
-      // Calculate correct answer
-      const correctAnswer = score / scorePerQuestion;
+    // Calculate correct answer
+    const correctAnswer = scorePerQuestion ? score / scorePerQuestion : 0;
 
-      // Add the formatted quiz data to the array
-      quizHistory.push({
-        dateAttempt,
-        quizName,
-        score,
-        numberOfQuestions,
-        duration: parseFloat(duration.toFixed(2)),
-        correctAnswer: correctAnswer,
-      });
-    }
+    // Add the formatted quiz data to the array
+    quizHistory.push({
+      dateAttempt,
+      quizName: quizName!,
+      score,
+      numberOfQuestions: numberOfQuestions!,
+      duration: parseFloat(duration.toFixed(2)),
+      correctAnswer: correctAnswer,
+    });
   }
 
   return quizHistory;

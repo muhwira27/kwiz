@@ -20,7 +20,10 @@ export interface HistoryQuizzes {
   quizId: string;
   score: number;
   startTime: Timestamp;
-  endTime: Timestamp
+  endTime: Timestamp;
+  // Optional fields for richer stats without extra reads
+  scorePerQuestion?: number;
+  numberOfQuestions?: number;
 }
 
 export const userConverter = {
@@ -38,6 +41,8 @@ export const userConverter = {
         score: hq.score,
         startTime: hq.startTime,
         endTime: hq.endTime,
+        scorePerQuestion: hq.scorePerQuestion,
+        numberOfQuestions: hq.numberOfQuestions,
       })),
     };
   },
@@ -60,6 +65,8 @@ export const userConverter = {
           score: hq.score,
           startTime: hq.startTime,
           endTime: hq.endTime,
+          scorePerQuestion: hq.scorePerQuestion,
+          numberOfQuestions: hq.numberOfQuestions,
         })) ?? null,
     } as UserType;
   },
