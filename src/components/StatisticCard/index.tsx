@@ -28,6 +28,9 @@ export default function StatisticCard(props: StatisticCardProps) {
   const userData = auth.user;
   const [points, setPoints] = useState<number>(userData.points ?? 0);
   const [level, setLevel] = useState<number>(userData.level ?? 1);
+  const [quizFinished, setQuizFinished] = useState<number>(userData.historyQuizzes?.length ?? 0);
+  const [timeSpentMins, setTimeSpentMins] = useState<number>(0);
+  const [correctAnswers, setCorrectAnswers] = useState<number>(0);
 
   const requiredPoints = getRequiredPointsForNextLevel(level);
   const progressPercentage = Math.min((points / requiredPoints) * 100, 100);
@@ -40,6 +43,30 @@ export default function StatisticCard(props: StatisticCardProps) {
           const userData = docSnapshot.data();
           setPoints(userData.points);
           setLevel(userData.level);
+
+          const histories = (userData.historyQuizzes ?? []) as Array<{
+            score: number;
+            startTime: any;
+            endTime: any;
+            scorePerQuestion?: number;
+          }>;
+          setQuizFinished(histories.length);
+
+          let totalMins = 0;
+          let totalCorrect = 0;
+          for (const h of histories) {
+            try {
+              const start = h.startTime?.toDate ? h.startTime.toDate() : new Date(h.startTime);
+              const end = h.endTime?.toDate ? h.endTime.toDate() : new Date(h.endTime);
+              totalMins += Math.max(0, (end.getTime() - start.getTime()) / 60000);
+            } catch {}
+
+            if (h.scorePerQuestion && h.scorePerQuestion > 0) {
+              totalCorrect += h.score / h.scorePerQuestion;
+            }
+          }
+          setTimeSpentMins(parseFloat(totalMins.toFixed(1)));
+          setCorrectAnswers(Math.round(totalCorrect));
         }
       });
       return () => unsubscribe();
@@ -50,17 +77,17 @@ export default function StatisticCard(props: StatisticCardProps) {
     {
       icon: FlagRounded,
       label: props.quizFinished,
-      value: '20',
+      value: String(quizFinished),
     },
     {
       icon: AccessTimeFilledRounded,
       label: props.timeSpent,
-      value: `12.6 ${props.mins}`,
+      value: `${timeSpentMins} ${props.mins}`,
     },
     {
       icon: CheckCircleRounded,
       label: props.correctAnswer,
-      value: '200',
+      value: String(correctAnswers),
     },
   ];
 

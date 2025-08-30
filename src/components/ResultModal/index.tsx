@@ -15,13 +15,14 @@ export default function ResultModal({
   onTryAgain,
   onFinish,
   score,
+  maxScore,
 }: {
   onTryAgain?: () => void;
   onFinish?: () => void;
   score: number;
+  maxScore: number;
 }) {
-
-  const maxScore = 100;
+  // Use provided maxScore based on quiz configuration
   const stars = 3;
   const starValue = maxScore / stars;
 
