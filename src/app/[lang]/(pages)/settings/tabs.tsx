@@ -8,9 +8,11 @@ import { usePathname } from 'next/navigation';
 export default function Tabs({
   children,
   lang,
+  settings,
 }: {
   children: React.ReactNode;
   lang: Locale;
+  settings: any;
 }) {
   const pathname = usePathname();
   return (
@@ -24,7 +26,7 @@ export default function Tabs({
           }`}
           href={`/${lang}/settings`}
         >
-          Settings
+          {settings.submenu1.title}
         </Link>
         <Link
           className={`p-2 text-base font-semibold leading-none sm:text-lg lg:text-lgx ${
@@ -34,7 +36,7 @@ export default function Tabs({
           }`}
           href={`/${lang}/settings/quiz-history`}
         >
-          Quiz History
+          {settings.submenu2.title}
         </Link>
       </main>
       {children}

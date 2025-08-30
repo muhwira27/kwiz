@@ -11,7 +11,7 @@ export default async function Settings({
 }) {
   const { settings } = await getDictionary(params.lang);
   return (
-    <Tabs lang={params.lang}>
+    <Tabs lang={params.lang} settings={settings}>
       <Table lang={params.lang} settings={settings} />
     </Tabs>
   );
