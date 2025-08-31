@@ -118,7 +118,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
       ref={sidebarRef}
       className={`${
         isSidebarVisible ? ' flex translate-x-0' : 'flex -translate-x-full'
-      } fixed left-0 top-0 z-20 h-screen w-fit transform flex-col gap-8 bg-[#fbf9f9] pt-[37px] transition-transform duration-300 ease-in-out md:sticky md:flex md:translate-x-0 md:bg-transparent lg:gap-9`}
+      } fixed left-0 top-0 z-20 h-dvh w-fit transform flex-col gap-8 bg-[#fbf9f9] pt-[37px] transition-transform duration-300 ease-in-out md:sticky md:flex md:h-screen md:translate-x-0 md:bg-transparent lg:gap-9`}
     >
       <div className="flex items-center gap-[2px] pl-16">
         <Image
@@ -135,8 +135,8 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
         />
       </div>
 
-      <div className="flex h-full flex-col items-start justify-between px-7 md:pr-0">
-        <nav>
+      <div className="flex h-full flex-col items-start px-7 md:pr-0">
+        <nav className="w-full flex-1 overflow-y-auto pr-1">
           <ul className="flex flex-col items-start gap-2 md:gap-3">
             {navigation.map((item) => (
               <li key={item.name}>
@@ -163,7 +163,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
           </ul>
         </nav>
 
-        <div className="pb-2">
+        <div className="mt-auto pb-2">
           <button
             onClick={handleLogout}
             className="flex w-56 items-center justify-start gap-7 rounded-large px-10 py-4 text-slate-grey hover:bg-misty-blue hover:bg-opacity-20 md:w-60 lg:w-[272px] lg:gap-8"
