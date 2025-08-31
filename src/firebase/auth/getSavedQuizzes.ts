@@ -1,58 +1,82 @@
-import { doc, onSnapshot } from 'firebase/firestore';
+import {
+  collection,
+  documentId,
+  onSnapshot,
+  query,
+  where,
+} from 'firebase/firestore';
 import { db } from '../config';
 import { QuizProps } from '../quiz/quiz';
+
+// Firestore `in` operator supports up to 10 IDs per query
+const CHUNK_SIZE = 10;
 
 export function getSavedQuizzes(
   savedQuizzes: Array<string> | null,
   lang: string,
-  callback: (quizzes: QuizProps[]) => void
+  callback: (quizzes: QuizProps[]) => void,
+  onReady?: () => void
 ): () => void {
-  if (savedQuizzes) {
-    const quizzes: QuizProps[] = [];
-
-    const unsubscribers = savedQuizzes.map((quizId) => {
-      const quizDocRef = doc(db, 'quiz', quizId);
-
-      return onSnapshot(quizDocRef, (quizDocSnap) => {
-        if (quizDocSnap.exists()) {
-          const quizData = quizDocSnap.data();
-          const quiz = {
-            id: quizId,
-            name: lang === 'en' ? quizData.name.en : quizData.name.id,
-            category:
-              lang === 'en' ? quizData.category.en : quizData.category.id,
-            thumbnail: quizData.thumbnail,
-            numberOfPlayers: quizData.numberOfPlayers,
-            numberOfQuestions: quizData.numberOfQuestions,
-            timePerQuestion: quizData.timePerQuestion,
-            scorePerQuestion: quizData.scorePerQuestion,
-            questions:
-              lang === 'en' ? quizData.questions.en : quizData.questions.id,
-          };
-
-          const quizIndex = quizzes.findIndex((q) => q.id === quizId);
-          if (quizIndex > -1) {
-            quizzes[quizIndex] = quiz;
-          } else {
-            quizzes.push(quiz);
-          }
-
-          callback([...quizzes]); // Ensure the array reference changes
-        } else {
-          const quizIndex = quizzes.findIndex((q) => q.id === quizId);
-          if (quizIndex > -1) {
-            quizzes.splice(quizIndex, 1);
-            callback([...quizzes]); // Ensure the array reference changes
-          }
-        }
-      });
-    });
-
-    return () => {
-      unsubscribers.forEach((unsub) => unsub());
-    };
-  } else {
-    console.log('There are no quizzes saved yet');
+  if (!savedQuizzes || savedQuizzes.length === 0) {
+    callback([]);
     return () => {};
   }
+
+  const ids = [...new Set(savedQuizzes)];
+  const chunks: string[][] = [];
+  for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
+    chunks.push(ids.slice(i, i + CHUNK_SIZE));
+  }
+
+  const map = new Map<string, QuizProps>();
+
+  const emit = () => {
+    // Emit in the same order as `savedQuizzes`
+    const ordered = savedQuizzes
+      .filter((id) => map.has(id))
+      .map((id) => map.get(id) as QuizProps);
+    callback([...ordered]);
+  };
+
+  let pendingInitial = chunks.length;
+
+  const unsubs = chunks.map((batch) => {
+    const q = query(
+      collection(db, 'quiz'),
+      where(documentId(), 'in', batch)
+    );
+    let first = true;
+    return onSnapshot(q, (snap) => {
+      const present = new Set<string>();
+      snap.forEach((docSnap) => {
+        const data: any = docSnap.data();
+        present.add(docSnap.id);
+        const quiz: QuizProps = {
+          id: docSnap.id,
+          name: lang === 'en' ? data?.name?.en ?? '' : data?.name?.id ?? '',
+          category:
+            lang === 'en' ? data?.category?.en ?? '' : data?.category?.id ?? '',
+          thumbnail: data?.thumbnail,
+          numberOfPlayers: data?.numberOfPlayers,
+          numberOfQuestions: data?.numberOfQuestions,
+          timePerQuestion: data?.timePerQuestion,
+          scorePerQuestion: data?.scorePerQuestion,
+          questions: lang === 'en' ? data?.questions?.en ?? [] : data?.questions?.id ?? [],
+        };
+        map.set(docSnap.id, quiz);
+      });
+      // Remove IDs from this batch that are no longer present
+      batch.forEach((id) => {
+        if (!present.has(id) && map.has(id)) map.delete(id);
+      });
+      emit();
+      if (first) {
+        first = false;
+        pendingInitial -= 1;
+        if (pendingInitial === 0) onReady && onReady();
+      }
+    });
+  });
+
+  return () => unsubs.forEach((u) => u());
 }
