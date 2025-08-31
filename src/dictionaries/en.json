@@ -92,7 +92,9 @@
   },
   "saved": {
     "title": "Saved Quiz",
-    "subtitle": "Pick a quiz and beat your previous score"
+    "subtitle": "Pick a quiz and beat your previous score",
+    "emptyTitle": "No saved quizzes yet",
+    "emptySubtitle": "Save quizzes from Dashboard or Category to find them here."
   },
   "search": {
     "title": "Search Results",

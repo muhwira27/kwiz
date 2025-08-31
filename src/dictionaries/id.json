@@ -92,7 +92,9 @@
   },
   "saved": {
     "title": "Kuis Tersimpan",
-    "subtitle": "Pilih kuis dan kalahkan skor Kamu sebelumnya"
+    "subtitle": "Pilih kuis dan kalahkan skor Kamu sebelumnya",
+    "emptyTitle": "Belum ada kuis tersimpan",
+    "emptySubtitle": "Simpan kuis dari Beranda atau Kategori untuk menemukannya di sini."
   },
   "search": {
     "title": "Hasil Pencarian",
