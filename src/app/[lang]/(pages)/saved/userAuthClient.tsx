@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import dynamic from 'next/dynamic';
@@ -24,24 +24,52 @@ export default function UserAuthClient({
   const auth = useAuth();
   const userData = auth.user;
   const [savedQuizzes, setSavedQuizzes] = useState<any[]>([]);
+  const [initialized, setInitialized] = useState(false);
+  const quizzesUnsubRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (userData?.id) {
       const userRef = doc(db, 'user', userData.id);
       const unsubscribe = onSnapshot(userRef, (userDoc) => {
+        setInitialized(true);
+        // Clean previous quiz listeners
+        if (quizzesUnsubRef.current) {
+          quizzesUnsubRef.current();
+          quizzesUnsubRef.current = null;
+        }
         if (userDoc.exists() && userDoc.data().savedQuizzes) {
-          const savedQuizIds = userDoc.data().savedQuizzes;
-          getSavedQuizzes(savedQuizIds, lang, (data) => {
-            setSavedQuizzes(data || []);
-          });
+          const savedQuizIds = userDoc.data().savedQuizzes as string[];
+          if (savedQuizIds && savedQuizIds.length > 0) {
+            quizzesUnsubRef.current = getSavedQuizzes(savedQuizIds, lang, (data) => {
+              setSavedQuizzes(data || []);
+            });
+          } else {
+            setSavedQuizzes([]);
+          }
+        } else {
+          setSavedQuizzes([]);
         }
       });
 
       return () => {
+        if (quizzesUnsubRef.current) quizzesUnsubRef.current();
         unsubscribe();
       };
+    } else {
+      setInitialized(false);
+      setSavedQuizzes([]);
     }
   }, [userData, lang]);
+
+  if (!initialized) {
+    return (
+      <section className="flex items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center rounded-2xl px-6 py-10 text-center text-slate-grey">
+          <p className="text-base sm:text-lg">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
   if (!savedQuizzes || savedQuizzes.length === 0) {
     return (
