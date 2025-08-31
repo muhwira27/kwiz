@@ -26,6 +26,7 @@ export default function UserAuthClient({
   const [savedQuizzes, setSavedQuizzes] = useState<any[]>([]);
   const [initialized, setInitialized] = useState(false);
   const quizzesUnsubRef = useRef<(() => void) | null>(null);
+  const [quizzesLoading, setQuizzesLoading] = useState(false);
 
   useEffect(() => {
     if (userData?.id) {
@@ -40,14 +41,22 @@ export default function UserAuthClient({
         if (userDoc.exists() && userDoc.data().savedQuizzes) {
           const savedQuizIds = userDoc.data().savedQuizzes as string[];
           if (savedQuizIds && savedQuizIds.length > 0) {
-            quizzesUnsubRef.current = getSavedQuizzes(savedQuizIds, lang, (data) => {
-              setSavedQuizzes(data || []);
-            });
+            setQuizzesLoading(true);
+            quizzesUnsubRef.current = getSavedQuizzes(
+              savedQuizIds,
+              lang,
+              (data) => {
+                setSavedQuizzes(data || []);
+              },
+              () => setQuizzesLoading(false)
+            );
           } else {
             setSavedQuizzes([]);
+            setQuizzesLoading(false);
           }
         } else {
           setSavedQuizzes([]);
+          setQuizzesLoading(false);
         }
       });
 
@@ -58,10 +67,21 @@ export default function UserAuthClient({
     } else {
       setInitialized(false);
       setSavedQuizzes([]);
+      setQuizzesLoading(false);
     }
   }, [userData, lang]);
 
   if (!initialized) {
+    return (
+      <section className="flex items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center rounded-2xl px-6 py-10 text-center text-slate-grey">
+          <p className="text-base sm:text-lg">Loading...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (quizzesLoading) {
     return (
       <section className="flex items-center justify-center">
         <div className="flex w-full flex-col items-center justify-center rounded-2xl px-6 py-10 text-center text-slate-grey">
