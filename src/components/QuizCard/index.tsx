@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { QuizProps } from '@/firebase/quiz/quiz';
 import { Bookmark, AccessTimeFilled } from '@mui/icons-material';
@@ -25,6 +25,7 @@ export default function QuizCard({
   const auth = useAuth();
   const userData = auth.user;
   const [isSaved, setIsSaved] = useState(false);
+  const handledRef = useRef(false);
 
   useEffect(() => {
     if (userData?.id) {
@@ -42,8 +43,27 @@ export default function QuizCard({
     }
   }, [userData, quiz.id]);
 
-  const handleSave = async (event: any) => {
-    event.preventDefault();
+  const stopAll = (event: any) => {
+    try {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.nativeEvent?.stopImmediatePropagation) {
+        event.nativeEvent.stopImmediatePropagation();
+      }
+    } catch {}
+  };
+
+  const handleSave = async (
+    event:
+      | React.PointerEvent<HTMLDivElement | SVGSVGElement>
+      | React.MouseEvent<HTMLDivElement | SVGSVGElement>
+      | React.TouchEvent<HTMLDivElement | SVGSVGElement>
+  ) => {
+    stopAll(event);
+    // Debounce so touchstart + click doesn't toggle twice
+    if (handledRef.current) return;
+    handledRef.current = true;
+    setTimeout(() => (handledRef.current = false), 400);
     const newSavedStatus = !isSaved;
     setIsSaved(newSavedStatus);
     await saveQuiz(userData.id!, quiz.id, newSavedStatus);
@@ -71,7 +91,12 @@ export default function QuizCard({
 
       <section className="flex items-center justify-between text-sm font-semibold text-slate-grey md:text-base">
         <h5>{quiz.name}</h5>
-        <div onClick={handleSave}>
+        <div
+          onPointerDownCapture={handleSave}
+          onClickCapture={stopAll}
+          role="button"
+          aria-label={isSaved ? 'Unsave quiz' : 'Save quiz'}
+        >
           <Bookmark
             sx={{ fontSize: { xs: 22, sm: 22, md: 24, lg: 24 } }}
             className={`z-50 cursor-pointer ${
