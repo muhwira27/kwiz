@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import useLeaveConfirmation from '@/hook/useLeaveConfirmation';
 import ResultModal from '@/components/ResultModal';
 import updatePoints from '@/firebase/auth/updatePoints';
+import incrementPlays from '@/firebase/quiz/incrementPlays';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import updateHistoryQuizzes from '@/firebase/auth/updateHistoryQuizzes';
 import { getHistoryQuizzes } from '@/firebase/auth/getHistoryQuizzes';
@@ -78,6 +79,8 @@ export default function Questions({
       startTime!,
       endTime!
     );
+    // Count a completed play attempt
+    await incrementPlays(quiz.id);
     router.refresh();
   };
 
