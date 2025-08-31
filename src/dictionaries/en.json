@@ -94,6 +94,10 @@
     "title": "Saved Quiz",
     "subtitle": "Pick a quiz and beat your previous score"
   },
+  "search": {
+    "title": "Search Results",
+    "resultsFor": "Results for"
+  },
   "settings": {
     "submenu1": {
       "title": "Settings",

@@ -8,7 +8,8 @@ import { useSidebar } from '../../context/SidebarContext';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import { i18n } from '@/i18n.config'; // Import i18n configuration
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type Header = {
   searchQuiz: string;
@@ -25,6 +26,8 @@ export default function Header({
   const { toggleSidebar } = useSidebar();
   const userData = auth.user;
   const pathName = usePathname();
+  const router = useRouter();
+  const [keyword, setKeyword] = useState('');
 
   // Function to redirect based on the selected locale
   const redirectedPathName = (locale: string) => {
@@ -57,6 +60,13 @@ export default function Header({
           id="search"
           className="w-full bg-transparent py-3 pl-3 text-sm font-medium text-slate-grey outline-none placeholder:text-slate-grey sm:text-base lg:py-4 lg:text-lg"
           placeholder={`${header.searchQuiz}..`}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && keyword.trim()) {
+              router.push(`/${lang}/search?q=${encodeURIComponent(keyword.trim())}`);
+            }
+          }}
         />
       </div>
 

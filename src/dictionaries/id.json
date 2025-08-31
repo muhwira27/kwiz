@@ -94,6 +94,10 @@
     "title": "Kuis Tersimpan",
     "subtitle": "Pilih kuis dan kalahkan skor Kamu sebelumnya"
   },
+  "search": {
+    "title": "Hasil Pencarian",
+    "resultsFor": "Hasil untuk"
+  },
   "settings": {
     "submenu1": {
       "title": "Pengaturan",
