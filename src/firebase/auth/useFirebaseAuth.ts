@@ -9,6 +9,9 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  setPersistence,
+  browserLocalPersistence,
   signOut,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
@@ -39,6 +42,9 @@ export function useFirebaseAuth() {
   });
 
   useEffect(() => {
+    // Ensure local persistence so redirect/popup state survives reloads
+    setPersistence(auth, browserLocalPersistence).catch(() => {});
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userData = await getUserData(user.uid);
@@ -176,7 +182,23 @@ export function useFirebaseAuth() {
   > => {
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+      provider.setCustomParameters({ prompt: 'select_account' });
+      let result: UserCredential | undefined;
+      try {
+        result = await signInWithPopup(auth, provider);
+      } catch (e: any) {
+        // Fallback to redirect on environments where popup is not supported (mobile/iOS)
+        const code = e?.code ?? '';
+        if (
+          code === 'auth/operation-not-supported-in-this-environment' ||
+          code === 'auth/popup-blocked' ||
+          code === 'auth/cancelled-popup-request'
+        ) {
+          await signInWithRedirect(auth, provider);
+          return;
+        }
+        throw e;
+      }
       const user = result.user;
       const document = await getDoc(doc(db, 'user', user.uid));
       if (!document.exists()) {
@@ -279,6 +301,7 @@ export function useFirebaseAuth() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
+        credentials: 'include',
       });
     } catch (e) {
       console.log(e);
@@ -287,7 +310,7 @@ export function useFirebaseAuth() {
 
   const clearSessionCookie = async () => {
     try {
-      await fetch('/api/session/delete', { method: 'POST' });
+      await fetch('/api/session/delete', { method: 'POST', credentials: 'include' });
     } catch (e) {
       console.log(e);
     }

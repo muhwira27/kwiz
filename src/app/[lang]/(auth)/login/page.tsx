@@ -2,14 +2,18 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { Google, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import Learning from '../../../../../public/images/Learning-bro.svg';
+import { getRedirectResult, GoogleAuthProvider, UserCredential } from 'firebase/auth';
+import { auth as firebaseAuth, db } from '@/firebase/config';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function Login() {
-  const auth = useAuth();
+  // Context-based auth utilities (login, logout, etc.)
+  const authCtx = useAuth();
   const router = useRouter();
   const { lang } = useParams() as { lang: string };
 
@@ -51,7 +55,7 @@ export default function Login() {
     }
 
     try {
-      const result = await auth.logIn(email, password);
+      const result = await authCtx.logIn(email, password);
       if (result == undefined) {
         router.push(`/${lang}/dashboard`);
         setTimeout(() => {
@@ -70,12 +74,65 @@ export default function Login() {
   ) => {
     event.preventDefault();
     try {
-      await auth.logInWithGoogle();
-      router.push(`/${lang}/dashboard`);
+      const ua = navigator.userAgent || '';
+      const isIOS = /iPhone|iPad|iPod|CriOS|FxiOS/i.test(ua);
+      const isInApp = /(FBAN|FBAV|Instagram|Line|MicroMessenger)/i.test(ua);
+      if (isIOS || isInApp) {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        await import('firebase/auth').then(({ signInWithRedirect }) =>
+          signInWithRedirect(firebaseAuth, provider)
+        );
+        return; // redirect will navigate away
+      }
+
+      const res = await authCtx.logInWithGoogle();
+      if (res) {
+        // Full reload to ensure cookie is available to middleware on navigation
+        window.location.replace(`/${lang}/dashboard`);
+      }
     } catch (e) {
       console.log(e);
     }
   };
+
+  // Handle redirect result (mobile/iOS fallback)
+  useEffect(() => {
+    const finalizeRedirect = async () => {
+      try {
+        const result: UserCredential | null = await getRedirectResult(firebaseAuth);
+        if (!result) return;
+        const user = result.user;
+        if (!user) return;
+        const ref = doc(db, 'user', user.uid);
+        const document = await getDoc(ref);
+        if (!document.exists()) {
+          await setDoc(ref, {
+            id: user.uid,
+            name: user.displayName,
+            email: user.email,
+            username: user.displayName,
+            level: 1,
+            points: 0,
+            savedQuizzes: [],
+            historyQuizzes: [],
+          });
+        }
+        await fetch('/api/session/set', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email }),
+          credentials: 'include',
+        });
+        // Use full reload so middleware sees the cookie immediately
+        window.location.replace(`/${lang}/dashboard`);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    finalizeRedirect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="flex h-dvh w-full flex-col items-center justify-center gap-6 bg-[#DAE1E5] px-2 sm:px-8 md:flex-row lg:px-14">
