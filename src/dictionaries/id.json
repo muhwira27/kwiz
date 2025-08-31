@@ -16,7 +16,7 @@
     "email": "Alamat Email*",
     "password": "Password*",
     "enterUsername": "Masukkan username",
-    "enterEmai": "Masukkan alamat email",
+    "enterEmail": "Masukkan alamat email",
     "enterPassword": "Masukkan password",
     "forgotPassword": "Lupa Password?",
     "registerButton": "Buat Akun",

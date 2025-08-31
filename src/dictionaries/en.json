@@ -16,7 +16,7 @@
     "email": "Email Address*",
     "password": "Password*",
     "enterUsername": "Enter username",
-    "enterEmai": "Enter email address",
+    "enterEmail": "Enter email address",
     "enterPassword": "Enter password",
     "forgotPassword": "Forgot Password?",
     "registerButton": "Create Account",
