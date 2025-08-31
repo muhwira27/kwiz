@@ -13,7 +13,7 @@ export default async function Saved({ params }: { params: { lang: Locale } }) {
         <h2 className="text-lgx font-bold sm:text-xxl">{saved.title}</h2>
         <p className="text-base sm:text-lgx">{saved.subtitle}</p>
       </section>
-      <UserAuthClient quizCard={quizCard} lang={params.lang} />
+      <UserAuthClient quizCard={quizCard} lang={params.lang} saved={saved} />
     </main>
   );
 }
