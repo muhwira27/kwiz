@@ -31,11 +31,22 @@ export default async function Quiz({
       ) : (
         <>
           <section className="flex flex-col gap-1 md:gap-2">
-            <h5 className="text-lgx font-bold text-slate-grey md:text-xl lg:text-xxl">
-              {lang === 'en'
-                ? `${quizData?.name} ${quiz.quizDetail.title}`
-                : `${quiz.quizDetail.title} ${quizData?.name}`}
-            </h5>
+            <div className="flex items-start justify-between gap-4">
+              <h5 className="text-lgx font-bold text-slate-grey md:text-xl lg:text-xxl">
+                {lang === 'en'
+                  ? `${quizData?.name} ${quiz.quizDetail.title}`
+                  : `${quiz.quizDetail.title} ${quizData?.name}`}
+              </h5>
+              {/* Desktop/tablet primary CTA at top */}
+              <Link href={`/${lang}/quiz/${id}/play`} className="hidden md:block">
+                <button
+                  type="button"
+                  className="rounded-large bg-misty-blue px-6 py-2 text-sm font-medium text-white hover:bg-stormy-sky md:px-10 md:py-3.5 md:text-lg lg:px-12 lg:py-4 lg:text-lgx"
+                >
+                  Start
+                </button>
+              </Link>
+            </div>
             <p className="text-base text-slate-grey md:text-lg lg:text-lgx">
               {quiz.quizDetail.subtitle}
             </p>
@@ -67,16 +78,17 @@ export default async function Quiz({
             </p>
           </section>
 
-          <section className="flex w-full justify-end">
-            <Link href={`${id}/play`}>
+          {/* Sticky bottom CTA for mobile */}
+          <div className="md:hidden">
+            <Link href={`/${lang}/quiz/${id}/play`}>
               <button
                 type="button"
-                className="rounded-large bg-misty-blue px-14 py-3 text-base font-medium text-white hover:bg-stormy-sky hover:font-semibold sm:text-lg md:px-16 md:py-4 md:text-lgx"
+                className="fixed bottom-4 left-1/2 z-40 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-full bg-misty-blue px-6 py-3 text-base font-medium text-white shadow-lg hover:bg-stormy-sky"
               >
                 Start
               </button>
             </Link>
-          </section>
+          </div>
         </>
       )}
     </main>
