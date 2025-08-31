@@ -8,8 +8,8 @@ import { useSidebar } from '../../context/SidebarContext';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import { i18n } from '@/i18n.config'; // Import i18n configuration
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
 type Header = {
   searchQuiz: string;
@@ -27,7 +27,47 @@ export default function Header({
   const userData = auth.user;
   const pathName = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [keyword, setKeyword] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Sync input with URL when on search page
+  useEffect(() => {
+    if (pathName?.includes('/search')) {
+      const q = searchParams.get('q') ?? '';
+      setKeyword(q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathName, searchParams]);
+
+  // Debounce navigation to search page on typing
+  useEffect(() => {
+    const q = keyword.trim();
+    if (!q) return;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const target = `/${lang}/search?q=${encodeURIComponent(q)}`;
+      setIsSearching(true);
+      if (pathName?.includes('/search')) {
+        router.replace(target);
+      } else {
+        router.push(target);
+      }
+    }, 300);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyword]);
+
+  // Stop small input loader when route finishes updating
+  useEffect(() => {
+    const ac = new AbortController();
+    const end = () => setIsSearching(false);
+    window.addEventListener('routeChangeEndEvent', end as any, { signal: ac.signal } as any);
+    return () => ac.abort();
+  }, []);
 
   // Function to redirect based on the selected locale
   const redirectedPathName = (locale: string) => {
@@ -49,7 +89,7 @@ export default function Header({
         <MenuRounded className="text-slate-grey" style={{ fontSize: '30px' }} />
       </button>
 
-      <div className="flex w-[55%] max-w-96 items-center rounded-large bg-white shadow-custom1">
+      <div className="relative flex w-[55%] max-w-96 items-center rounded-large bg-white shadow-custom1">
         <div className="pl-6 md:pl-7">
           <Search
             className="text-misty-blue"
@@ -64,10 +104,15 @@ export default function Header({
           onChange={(e) => setKeyword(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && keyword.trim()) {
+              if (debounceRef.current) clearTimeout(debounceRef.current);
+              setIsSearching(true);
               router.push(`/${lang}/search?q=${encodeURIComponent(keyword.trim())}`);
             }
           }}
         />
+        {isSearching && (
+          <span className="pointer-events-none absolute right-3 inline-flex h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-misty-blue" />
+        )}
       </div>
 
       <div className="flex items-center gap-4 lg:gap-6">
