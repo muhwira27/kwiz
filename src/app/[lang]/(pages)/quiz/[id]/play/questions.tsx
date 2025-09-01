@@ -18,6 +18,10 @@ type QuestionsProps = {
   second: string;
   send: string;
   submit: string;
+  congrats: string;
+  earnScore: string;
+  tryAgain: string;
+  finish: string;
 };
 
 export default function Questions({
@@ -120,6 +124,12 @@ export default function Questions({
           maxScore={quiz.scorePerQuestion * quiz.numberOfQuestions}
           onTryAgain={handleTryAgain}
           onFinish={handleFinishQuiz}
+          labels={{
+            congrats: props.congrats,
+            earnScore: props.earnScore,
+            tryAgain: props.tryAgain,
+            finish: props.finish,
+          }}
         />
       )}
     </main>

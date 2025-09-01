@@ -11,16 +11,25 @@ const StyledRating = styled(Rating)({
   },
 });
 
+type Labels = {
+  congrats: string;
+  earnScore: string;
+  tryAgain: string;
+  finish: string;
+};
+
 export default function ResultModal({
   onTryAgain,
   onFinish,
   score,
   maxScore,
+  labels,
 }: {
   onTryAgain?: () => void;
   onFinish?: () => void;
   score: number;
   maxScore: number;
+  labels: Labels;
 }) {
   // Use provided maxScore based on quiz configuration
   const stars = 3;
@@ -91,11 +100,11 @@ export default function ResultModal({
 
           <div className="flex flex-col gap-1">
             <p className="text-center text-xxl font-semibold text-slate-grey md:text-2xl">
-              Congratulations
+              {labels.congrats}
             </p>
 
             <p className="text-center text-sm font-medium text-slate-grey md:text-base">
-              You have earned a score of
+              {labels.earnScore}
             </p>
           </div>
 
@@ -109,13 +118,13 @@ export default function ResultModal({
             className="rounded-lg bg-[#F42020] bg-opacity-65 px-6 py-2 text-sm font-medium tracking-wide text-white md:px-8 md:text-base"
             onClick={onTryAgain}
           >
-            Try Again
+            {labels.tryAgain}
           </button>
           <button
             className="rounded-lg bg-misty-blue px-9 py-2 text-sm font-medium tracking-wide text-white md:px-11 md:text-base"
             onClick={onFinish}
           >
-            Finish
+            {labels.finish}
           </button>
         </div>
       </div>
