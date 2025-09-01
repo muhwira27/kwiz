@@ -6,6 +6,9 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "common": {
+    "loading": "Loading..."
+  },
   "header": {
     "searchQuiz": "Search Quiz"
   },

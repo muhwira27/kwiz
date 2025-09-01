@@ -6,6 +6,9 @@
     "settings": "Pengaturan",
     "logout": "Keluar"
   },
+  "common": {
+    "loading": "Memuat..."
+  },
   "header": {
     "searchQuiz": "Cari Kuis"
   },
