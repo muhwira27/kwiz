@@ -11,10 +11,12 @@ export default function SearchClient({
   lang,
   query,
   quizCard,
+  loadingText,
 }: {
   lang: Locale;
   query: string;
   quizCard: any;
+  loadingText?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
@@ -39,7 +41,9 @@ export default function SearchClient({
   return (
     <section>
       <div className="flex h-fit w-full gap-3 overflow-x-auto rounded-2xl px-2 py-4 scrollbar-hide">
-        {loading && <p className="px-2 text-slate-grey">Loading...</p>}
+        {loading && (
+          <p className="px-2 text-slate-grey">{loadingText ?? 'Loading...'}</p>
+        )}
         {!loading && results.length === 0 && (
           <p className="px-2 text-slate-grey">No results</p>
         )}
@@ -53,4 +57,3 @@ export default function SearchClient({
     </section>
   );
 }
-

@@ -11,6 +11,7 @@ export default async function SearchPage({
   searchParams: { q?: string };
 }) {
   const { search, quizCard } = await getDictionary(params.lang);
+  const { common } = await getDictionary(params.lang);
   const q = (searchParams.q ?? '').toString();
 
   return (
@@ -19,8 +20,12 @@ export default async function SearchPage({
         <h2 className="text-lgx font-bold sm:text-xxl">{search.title}</h2>
         <p className="text-base sm:text-lgx">{search.resultsFor} &ldquo;{q}&rdquo;</p>
       </section>
-      <SearchClient lang={params.lang} query={q} quizCard={quizCard} />
+      <SearchClient
+        lang={params.lang}
+        query={q}
+        quizCard={quizCard}
+        loadingText={common.loading}
+      />
     </main>
   );
 }
-
