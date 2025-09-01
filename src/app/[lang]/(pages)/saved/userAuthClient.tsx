@@ -16,10 +16,12 @@ export default function UserAuthClient({
   quizCard,
   lang,
   saved,
+  loadingText,
 }: {
   quizCard: any;
   lang: Locale;
   saved: any;
+  loadingText?: string;
 }) {
   const auth = useAuth();
   const userData = auth.user;
@@ -75,7 +77,7 @@ export default function UserAuthClient({
     return (
       <section className="flex items-center justify-center">
         <div className="flex w-full flex-col items-center justify-center rounded-2xl px-6 py-10 text-center text-slate-grey">
-          <p className="text-base sm:text-lg">Loading...</p>
+          <p className="text-base sm:text-lg">{loadingText ?? 'Loading...'}</p>
         </div>
       </section>
     );
@@ -85,7 +87,7 @@ export default function UserAuthClient({
     return (
       <section className="flex items-center justify-center">
         <div className="flex w-full flex-col items-center justify-center rounded-2xl px-6 py-10 text-center text-slate-grey">
-          <p className="text-base sm:text-lg">Loading...</p>
+          <p className="text-base sm:text-lg">{loadingText ?? 'Loading...'}</p>
         </div>
       </section>
     );
