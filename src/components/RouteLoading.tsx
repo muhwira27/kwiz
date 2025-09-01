@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-export default function RouteLoading() {
+export default function RouteLoading({ text }: { text?: string }) {
   const [navigating, setNavigating] = useState(false);
 
   useEffect(() => {
@@ -31,5 +31,5 @@ export default function RouteLoading() {
   if (!navigating) return null;
   if (typeof window === 'undefined') return null;
   // Render overlay at document.body level so it covers sidebar + content
-  return createPortal(<LoadingSpinner />, document.body);
+  return createPortal(<LoadingSpinner text={text} />, document.body);
 }
