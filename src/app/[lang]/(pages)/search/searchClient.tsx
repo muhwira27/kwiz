@@ -12,11 +12,13 @@ export default function SearchClient({
   query,
   quizCard,
   loadingText,
+  noResultsText,
 }: {
   lang: Locale;
   query: string;
   quizCard: any;
   loadingText?: string;
+  noResultsText?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
@@ -45,7 +47,7 @@ export default function SearchClient({
           <p className="px-2 text-slate-grey">{loadingText ?? 'Loading...'}</p>
         )}
         {!loading && results.length === 0 && (
-          <p className="px-2 text-slate-grey">No results</p>
+          <p className="px-2 text-slate-grey">{noResultsText ?? 'No results'}</p>
         )}
         {!loading &&
           results.map((quiz) => (

@@ -10,19 +10,24 @@ import Learning from '../../../../../public/images/Learning-bro.svg';
 import { getRedirectResult, GoogleAuthProvider, UserCredential } from 'firebase/auth';
 import { auth as firebaseAuth, db } from '@/firebase/config';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import type { Locale } from '@/i18n.config';
+import { getClientDictionary } from '@/lib/dictionaryClient';
 
 export default function Login() {
   // Context-based auth utilities (login, logout, etc.)
   const authCtx = useAuth();
   const router = useRouter();
   const { lang } = useParams() as { lang: string };
-  const loadingText = lang === 'en' ? 'Loading...' : 'Memuat...';
+  const dict = getClientDictionary(lang as Locale);
+  const t = dict.auth;
+  const loadingText = dict.common.loading;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState<any>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -44,13 +49,15 @@ export default function Login() {
     setLoginError(null);
 
     if (!email) {
-      setLoginError('Email address is required');
+      setErrorKey('required-email');
+      setLoginError(t.errors?.requiredEmail ?? 'Email address is required');
       setLoading(false);
       return;
     }
 
     if (!password) {
-      setLoginError('Password is required');
+      setErrorKey('required-password');
+      setLoginError(t.errors?.requiredPassword ?? 'Password is required');
       setLoading(false);
       return;
     }
@@ -63,7 +70,17 @@ export default function Login() {
           setLoading(false);
         }, 3000);
       } else {
-        setLoginError(result);
+        let key: string | null = null;
+        let msg = String(result);
+        if (msg.includes("We couldn't log you in")) {
+          key = 'invalid-credential';
+          msg = t.errors?.invalidCredentialGeneric ?? msg;
+        } else if (msg.includes('Invalid email address')) {
+          key = 'invalid-email';
+          msg = t.errors?.invalidEmail ?? msg;
+        }
+        setErrorKey(key);
+        setLoginError(msg);
         setLoading(false);
       }
     } finally {
@@ -148,9 +165,9 @@ export default function Login() {
       </section>
       <section className="flex h-fit w-full max-w-[640px] flex-col items-center gap-5 rounded-large bg-soft-white px-4 py-8 md:w-1/2 md:gap-4 md:px-12 md:py-5 min-[1280px]:gap-5 min-[1280px]:py-8 lg:w-[70%] lg:px-24">
         <h2 className="mb-2 text-center text-xl font-bold md:mb-0 md:text-[24px]">
-          Login to your Account
+          {t.login}
         </h2>
-        {loginError && loginError.includes("We couldn't log you in.") ? (
+        {errorKey === 'invalid-credential' && loginError ? (
           <p className="rounded-md border-l-4 border-green-500 bg-green-100 px-4 py-3 text-sm text-red-500 md:py-2 lg:py-4">
             {loginError}
           </p>
@@ -161,22 +178,20 @@ export default function Login() {
               htmlFor="email"
               className="text-sm font-medium text-slate-grey"
             >
-              Email Address
+              {t.email.replace('*','')}
             </label>
             <input
               type="email"
-              placeholder="example@email.com"
+              placeholder={t.enterEmail}
               value={email}
               onChange={handleEmailChange}
               className={`w-full rounded-large bg-soft-white px-8 py-4 text-charcoal shadow-custom1 focus:outline-none md:py-3 lg:py-4 ${
-                loginError &&
-                (loginError.includes('email') || loginError.includes('Email'))
+                errorKey === 'required-email' || errorKey === 'invalid-email'
                   ? 'border border-red-500'
                   : ''
               }`}
             />
-            {(loginError && loginError.includes('email address')) ||
-            (loginError && loginError.includes('Email address')) ? (
+            {errorKey === 'required-email' || errorKey === 'invalid-email' ? (
               <p className="ml-3 text-xs text-red-500">{loginError}</p>
             ) : null}
           </div>
@@ -185,11 +200,11 @@ export default function Login() {
               htmlFor="password"
               className="text-sm font-medium text-slate-grey"
             >
-              Password
+              {t.password.replace('*','')}
             </label>
             <div
               className={`flex w-full rounded-large bg-soft-white py-4 pl-8 pr-5 text-charcoal shadow-custom1 md:py-3 lg:py-4 ${
-                loginError && loginError.includes('Password')
+                errorKey === 'required-password'
                   ? 'border border-red-500'
                   : ''
               }`}
@@ -197,7 +212,7 @@ export default function Login() {
               <input
                 type={passwordVisible ? 'text' : 'password'}
                 id="password"
-                placeholder="Enter your password"
+                placeholder={t.enterPassword}
                 value={password}
                 autoComplete="on"
                 onChange={handlePasswordChange}
@@ -212,14 +227,14 @@ export default function Login() {
               </button>
             </div>
             <div className="mt-1 flex w-full items-start">
-              {loginError && loginError.includes('Password') ? (
+              {errorKey === 'required-password' ? (
                 <p className="ml-3 w-full text-xs text-red-500">{loginError}</p>
               ) : null}
               <Link
                 href={`/${lang}/forgot-password`}
                 className="w-full text-right text-sm font-medium text-slate-grey"
               >
-                Forgot Password?
+                {t.forgotPassword}
               </Link>
             </div>
           </div>
@@ -231,11 +246,11 @@ export default function Login() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? loadingText : 'Login'}
+              {loading ? loadingText : t.loginButton}
             </button>
             <div className="flex w-full items-center px-2">
               <div className="h-px w-full border border-[#F5F5F5]"></div>
-              <p className="px-3 text-xs font-normal text-[#BABABA]">OR</p>
+              <p className="px-3 text-xs font-normal text-[#BABABA]">{t.or}</p>
               <div className="h-px w-full border border-[#F5F5F5]"></div>
             </div>
             <button
@@ -245,14 +260,14 @@ export default function Login() {
               disabled={loading}
             >
               <Google></Google>
-              <p>{'Login with Google'}</p>
+              <p>{t.loginGoogle}</p>
             </button>
           </div>
         </form>
         <p className="pt-2 text-sm font-medium text-slate-grey">
-          {'Don’t have an account? '}
+          {t.dontHaveAccount + ' '}
           <Link href={`/${lang}/signup`} className="text-[#007AFF]">
-            Sign Up now
+            {t.signUpNow}
           </Link>
         </p>
       </section>

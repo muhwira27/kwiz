@@ -25,6 +25,7 @@ export default async function SearchPage({
         query={q}
         quizCard={quizCard}
         loadingText={common.loading}
+        noResultsText={common.noResults}
       />
     </main>
   );

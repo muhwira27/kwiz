@@ -37,7 +37,7 @@ export default async function Content({
       ) : (
         <tr>
           <td colSpan={5} className="p-6 text-center text-gray-500">
-            No quiz history available.
+            {settings.submenu2.empty}
           </td>
         </tr>
       )}

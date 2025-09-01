@@ -7,19 +7,24 @@ import { useState, ChangeEvent } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import Learning from '../../../../../public/images/Learning-bro.svg';
+import type { Locale } from '@/i18n.config';
+import { getClientDictionary } from '@/lib/dictionaryClient';
 
 export default function SignUp() {
   const auth = useAuth();
   const router = useRouter();
   const { lang } = useParams() as { lang: string };
-  const loadingText = lang === 'en' ? 'Loading...' : 'Memuat...';
+  const dict = getClientDictionary(lang as Locale);
+  const t = dict.auth;
+  const loadingText = dict.common.loading;
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [signupError, setSignupError] = useState<any>(null);
+  const [signupError, setSignupError] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -45,19 +50,22 @@ export default function SignUp() {
     setSignupError(null);
 
     if (!username) {
-      setSignupError('Username is required');
+      setErrorKey('required-username');
+      setSignupError(t.errors?.requiredUsername ?? 'Username is required');
       setLoading(false);
       return;
     }
 
     if (!email) {
-      setSignupError('Email adress is required');
+      setErrorKey('required-email');
+      setSignupError(t.errors?.requiredEmail ?? 'Email address is required');
       setLoading(false);
       return;
     }
 
     if (!password) {
-      setSignupError('Password is required');
+      setErrorKey('required-password');
+      setSignupError(t.errors?.requiredPassword ?? 'Password is required');
       setLoading(false);
       return;
     }
@@ -70,7 +78,23 @@ export default function SignUp() {
           setLoading(false);
         }, 3000);
       } else {
-        setSignupError(result);
+        let key: string | null = null;
+        let msg = String(result);
+        if (msg.includes('Username already exists')) {
+          key = 'username-exists';
+          msg = t.errors?.usernameExists ?? msg;
+        } else if (msg.includes('Email already in use')) {
+          key = 'email-in-use';
+          msg = t.errors?.emailAlreadyInUse ?? msg;
+        } else if (msg.includes('Invalid email address')) {
+          key = 'invalid-email';
+          msg = t.errors?.invalidEmail ?? msg;
+        } else if (msg.includes('Password should be at least 6 characters')) {
+          key = 'weak-password';
+          msg = t.errors?.weakPassword ?? msg;
+        }
+        setErrorKey(key);
+        setSignupError(msg);
         setLoading(false);
       }
     } finally {
@@ -102,7 +126,7 @@ export default function SignUp() {
       </section>
       <section className="flex h-fit w-full max-w-[640px] flex-col items-center gap-5 rounded-large bg-soft-white px-4 py-8 md:w-1/2 md:gap-4 md:px-12 md:py-5 min-[1280px]:gap-5 min-[1280px]:py-8 lg:w-[70%] lg:px-24">
         <h2 className="mb-2 text-center text-xl font-bold md:mb-0 md:text-[24px]">
-          Create Your Account
+          {t.register}
         </h2>
         <form className="flex w-full flex-col gap-4 md:gap-3 lg:gap-4">
           <div className="flex flex-col items-start gap-2">
@@ -110,21 +134,21 @@ export default function SignUp() {
               htmlFor="username"
               className="text-sm font-medium text-slate-grey"
             >
-              Username
+              {t.username.replace('*','')}
             </label>
             <input
               type="text"
               id="username"
-              placeholder="Enter your username"
+              placeholder={t.enterUsername}
               value={username}
               onChange={handleUsernameChange}
               className={`w-full rounded-large bg-soft-white px-8 py-4 text-charcoal shadow-custom1 focus:outline-none md:py-3 lg:py-4 ${
-                signupError && signupError.includes('Username')
+                errorKey === 'required-username' || errorKey === 'username-exists'
                   ? 'border border-red-500'
                   : ''
               }`}
             />
-            {signupError && signupError.includes('Username') && (
+            {(errorKey === 'required-username' || errorKey === 'username-exists') && signupError && (
               <p className="ml-3 text-xs text-red-500">{signupError}</p>
             )}
           </div>
@@ -133,22 +157,20 @@ export default function SignUp() {
               htmlFor="email"
               className="text-sm font-medium text-slate-grey"
             >
-              Email Address
+              {t.email.replace('*','')}
             </label>
             <input
               type="email"
-              placeholder="example@email.com"
+              placeholder={t.enterEmail}
               value={email}
               onChange={handleEmailChange}
               className={`w-full rounded-large bg-soft-white px-8 py-4 text-charcoal shadow-custom1 focus:outline-none md:py-3 lg:py-4 ${
-                signupError &&
-                (signupError.includes('email') || signupError.includes('Email'))
+                errorKey === 'required-email' || errorKey === 'email-in-use' || errorKey === 'invalid-email'
                   ? 'border border-red-500'
                   : ''
               }`}
             />
-            {(signupError && signupError.includes('email')) ||
-            (signupError && signupError.includes('Email')) ? (
+            {(errorKey === 'required-email' || errorKey === 'email-in-use' || errorKey === 'invalid-email') && signupError ? (
               <p className="ml-3 text-xs text-red-500">{signupError}</p>
             ) : null}
           </div>
@@ -157,11 +179,11 @@ export default function SignUp() {
               htmlFor="password"
               className="text-sm font-medium text-slate-grey"
             >
-              Password
+              {t.password.replace('*','')}
             </label>
             <div
               className={`flex w-full rounded-large bg-soft-white py-4 pl-8 pr-5 text-charcoal shadow-custom1 md:py-3 lg:py-4 ${
-                signupError && signupError.includes('Password')
+                errorKey === 'required-password' || errorKey === 'weak-password'
                   ? 'border border-red-500'
                   : ''
               }`}
@@ -170,7 +192,7 @@ export default function SignUp() {
                 type={passwordVisible ? 'text' : 'password'}
                 autoComplete="on"
                 id="password"
-                placeholder="Enter your password"
+                placeholder={t.enterPassword}
                 value={password}
                 onChange={handlePasswordChange}
                 className="-mr-[10px] w-full border-none focus:outline-none"
@@ -183,7 +205,7 @@ export default function SignUp() {
                 {passwordVisible ? <VisibilityOff /> : <Visibility />}
               </button>
             </div>
-            {signupError && signupError.includes('Password') ? (
+            {(errorKey === 'required-password' || errorKey === 'weak-password') && signupError ? (
               <p className="ml-3 text-xs text-red-500">{signupError}</p>
             ) : null}
           </div>
@@ -195,11 +217,11 @@ export default function SignUp() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? loadingText : 'Create Account'}
+              {loading ? loadingText : t.registerButton}
             </button>
             <div className="flex w-full items-center px-2">
               <div className="h-px w-full border border-[#F5F5F5]"></div>
-              <p className="px-3 text-xs font-normal text-[#BABABA]">OR</p>
+              <p className="px-3 text-xs font-normal text-[#BABABA]">{t.or}</p>
               <div className="h-px w-full border border-[#F5F5F5]"></div>
             </div>
             <button
@@ -209,14 +231,14 @@ export default function SignUp() {
               disabled={loading}
             >
               <Google></Google>
-              <p>{'Sign Up with Google'}</p>
+              <p>{t.registerGoogle}</p>
             </button>
           </div>
         </form>
         <p className="pt-2 text-sm font-medium text-slate-grey">
-          Already have an account?{' '}
+          {t.haveAccount + ' '}
           <Link href={`/${lang}/login`} className="text-[#007AFF]">
-            Login now
+            {t.loginNow}
           </Link>
         </p>
       </section>

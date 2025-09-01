@@ -6,14 +6,19 @@ import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import Learning from '../../../../../public/images/Learning-bro.svg';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import type { Locale } from '@/i18n.config';
+import { getClientDictionary } from '@/lib/dictionaryClient';
 
 export default function ForgotPassword() {
   const auth = useAuth();
   const { lang } = useParams() as { lang: string };
-  const loadingText = lang === 'en' ? 'Loading...' : 'Memuat...';
+  const dict = getClientDictionary(lang as Locale);
+  const t = dict.auth;
+  const loadingText = dict.common.loading;
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +33,8 @@ export default function ForgotPassword() {
     setError(null);
 
     if (!email) {
-      setError('Email address is required');
+      setErrorKey('required-email');
+      setError(t.errors?.requiredEmail ?? 'Email address is required');
       setLoading(false);
       return;
     }
@@ -37,11 +43,19 @@ export default function ForgotPassword() {
       const result = await auth.sendResetPasswordEmail(email);
 
       if (result == undefined) {
-        setSuccessMessage(
-          'Password reset email sent. Please check your inbox.'
-        );
+        setSuccessMessage(t.resetPasswordSent);
       } else {
-        setError(result);
+        let key: string | null = null;
+        let msg = String(result);
+        if (msg.includes('Email is not registered')) {
+          key = 'email-not-registered';
+          msg = t.errors?.emailNotRegistered ?? msg;
+        } else if (msg.includes('Invalid email address')) {
+          key = 'invalid-email';
+          msg = t.errors?.invalidEmail ?? msg;
+        }
+        setErrorKey(key);
+        setError(msg);
       }
     } finally {
       setLoading(false);
@@ -61,7 +75,7 @@ export default function ForgotPassword() {
       </section>
       <section className="flex h-fit w-full max-w-[640px] flex-col items-center gap-5 rounded-large bg-soft-white px-4 py-8 md:w-1/2 md:gap-4 md:px-12 md:py-5 min-[1280px]:gap-5 min-[1280px]:py-8 lg:w-[70%] lg:px-24">
         <h2 className="mb-2 text-center text-xl font-bold md:mb-0 md:text-[24px]">
-          Forgot Your Password?
+          {t.forgotPassword}
         </h2>
 
         <form className="flex w-full flex-col gap-4">
@@ -75,21 +89,20 @@ export default function ForgotPassword() {
               htmlFor="email"
               className="text-sm font-medium text-slate-grey"
             >
-              Email Address
+              {t.email.replace('*','')}
             </label>
             <input
               type="email"
-              placeholder="example@email.com"
+              placeholder={t.enterEmail}
               value={email}
               onChange={handleEmailChange}
               className={`w-full rounded-large bg-soft-white px-8 py-4 text-charcoal shadow-custom1 focus:outline-none ${
-                error && (error.includes('email') || error.includes('Email'))
+                errorKey === 'required-email' || errorKey === 'invalid-email' || errorKey === 'email-not-registered'
                   ? 'border border-red-500'
                   : ''
               }`}
             />
-            {(error && error.includes('email')) ||
-            (error && error.includes('Email')) ? (
+            {(errorKey === 'required-email' || errorKey === 'invalid-email' || errorKey === 'email-not-registered') && error ? (
               <p className="ml-3 text-xs text-red-500">{error}</p>
             ) : null}
           </div>
@@ -100,14 +113,14 @@ export default function ForgotPassword() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? loadingText : 'Reset Password'}
+              {loading ? loadingText : t.resetPassword}
             </button>
             <Link
               href={`/${lang}/login`}
               type="submit"
               className="mt-2 flex h-12 w-full items-center justify-center rounded-full bg-soft-white font-semibold text-charcoal shadow-custom1"
             >
-              Back to Login
+              {t.backToLogin}
             </Link>
           </div>
         </form>
