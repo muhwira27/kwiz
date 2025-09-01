@@ -110,7 +110,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
       {mounted && loggingOut &&
         createPortal(
           <div className="fixed inset-0 z-[1000]">
-            <LoadingSpinner />
+            <LoadingSpinner text={lang === 'en' ? 'Loading...' : 'Memuat...'} />
           </div>,
           document.body
         )}

@@ -23,6 +23,7 @@ export default async function RootLayout({
 }) {
   const { menu } = await getDictionary(params.lang);
   const { header } = await getDictionary(params.lang);
+  const { common } = await getDictionary(params.lang);
 
   return (
     <AuthUserProvider>
@@ -32,7 +33,7 @@ export default async function RootLayout({
             <Sidebar menu={menu} lang={params.lang} />
             <section className="relative flex w-full flex-col overflow-auto sm:px-6 md:px-7 lg:pr-8">
               <Header lang={params.lang} header={header} />
-              <RouteLoading />
+              <RouteLoading text={common.loading} />
               {children}
             </section>
           </section>

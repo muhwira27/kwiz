@@ -16,6 +16,7 @@ export default function Login() {
   const authCtx = useAuth();
   const router = useRouter();
   const { lang } = useParams() as { lang: string };
+  const loadingText = lang === 'en' ? 'Loading...' : 'Memuat...';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -230,7 +231,7 @@ export default function Login() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? 'Loading...' : 'Login'}
+              {loading ? loadingText : 'Login'}
             </button>
             <div className="flex w-full items-center px-2">
               <div className="h-px w-full border border-[#F5F5F5]"></div>

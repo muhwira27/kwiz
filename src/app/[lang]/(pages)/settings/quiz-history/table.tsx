@@ -8,9 +8,11 @@ import Content from './content';
 export default function Table({
   lang,
   settings,
+  loadingText,
 }: {
   lang: Locale;
   settings: any;
+  loadingText?: string;
 }) {
   const auth = useAuth();
   const userData = auth.user;
@@ -60,7 +62,7 @@ export default function Table({
             <tbody>
               <tr>
                 <td colSpan={6} className="p-6 text-center text-gray-500">
-                  Loading...
+                  {loadingText ?? 'Loading...'}
                 </td>
               </tr>
             </tbody>

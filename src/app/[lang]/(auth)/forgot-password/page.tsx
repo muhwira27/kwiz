@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation';
 export default function ForgotPassword() {
   const auth = useAuth();
   const { lang } = useParams() as { lang: string };
+  const loadingText = lang === 'en' ? 'Loading...' : 'Memuat...';
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
@@ -99,7 +100,7 @@ export default function ForgotPassword() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? 'Loading...' : 'Reset Password'}
+              {loading ? loadingText : 'Reset Password'}
             </button>
             <Link
               href={`/${lang}/login`}

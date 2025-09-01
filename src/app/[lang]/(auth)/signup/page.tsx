@@ -12,6 +12,7 @@ export default function SignUp() {
   const auth = useAuth();
   const router = useRouter();
   const { lang } = useParams() as { lang: string };
+  const loadingText = lang === 'en' ? 'Loading...' : 'Memuat...';
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -194,7 +195,7 @@ export default function SignUp() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? 'Loading...' : 'Create Account'}
+              {loading ? loadingText : 'Create Account'}
             </button>
             <div className="flex w-full items-center px-2">
               <div className="h-px w-full border border-[#F5F5F5]"></div>

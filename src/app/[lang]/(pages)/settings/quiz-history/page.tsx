@@ -10,9 +10,10 @@ export default async function Settings({
   params: { lang: Locale };
 }) {
   const { settings } = await getDictionary(params.lang);
+  const { common } = await getDictionary(params.lang);
   return (
     <Tabs lang={params.lang} settings={settings}>
-      <Table lang={params.lang} settings={settings} />
+      <Table lang={params.lang} settings={settings} loadingText={common.loading} />
     </Tabs>
   );
 }
