@@ -7,7 +7,11 @@ import { Google, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
 import Learning from '../../../../../public/images/Learning-bro.svg';
-import { getRedirectResult, GoogleAuthProvider, UserCredential } from 'firebase/auth';
+import {
+  getRedirectResult,
+  GoogleAuthProvider,
+  UserCredential,
+} from 'firebase/auth';
 import { auth as firebaseAuth, db } from '@/firebase/config';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import type { Locale } from '@/i18n.config';
@@ -118,7 +122,8 @@ export default function Login() {
   useEffect(() => {
     const finalizeRedirect = async () => {
       try {
-        const result: UserCredential | null = await getRedirectResult(firebaseAuth);
+        const result: UserCredential | null =
+          await getRedirectResult(firebaseAuth);
         if (!result) return;
         const user = result.user;
         if (!user) return;
@@ -178,7 +183,7 @@ export default function Login() {
               htmlFor="email"
               className="text-sm font-medium text-slate-grey"
             >
-              {t.email.replace('*','')}
+              {t.email.replace('*', '')}
             </label>
             <input
               type="email"
@@ -200,13 +205,11 @@ export default function Login() {
               htmlFor="password"
               className="text-sm font-medium text-slate-grey"
             >
-              {t.password.replace('*','')}
+              {t.password.replace('*', '')}
             </label>
             <div
               className={`flex w-full rounded-large bg-soft-white py-4 pl-8 pr-5 text-charcoal shadow-custom1 md:py-3 lg:py-4 ${
-                errorKey === 'required-password'
-                  ? 'border border-red-500'
-                  : ''
+                errorKey === 'required-password' ? 'border border-red-500' : ''
               }`}
             >
               <input
@@ -230,12 +233,14 @@ export default function Login() {
               {errorKey === 'required-password' ? (
                 <p className="ml-3 w-full text-xs text-red-500">{loginError}</p>
               ) : null}
-              <Link
-                href={`/${lang}/forgot-password`}
-                className="w-full text-right text-sm font-medium text-slate-grey"
-              >
-                {t.forgotPassword}
-              </Link>
+              <div className="flex w-full justify-end">
+                <Link
+                  href={`/${lang}/forgot-password`}
+                  className="text-right text-sm font-medium text-slate-grey"
+                >
+                  {t.forgotPassword}
+                </Link>
+              </div>
             </div>
           </div>
 
