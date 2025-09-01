@@ -66,7 +66,10 @@ export async function updateSession(request: NextRequest) {
     name: "session",
     value: await encrypt(parsed),
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
     expires: parsed.expires,
+    path: '/',
   });
   return res;
 }
