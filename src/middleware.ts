@@ -61,7 +61,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(absoluteURL.toString());
   }
 
-  if (!session && protectedRoutes.includes(pathname)) {
+  // Treat dynamic quiz routes as protected as well
+  const isQuizPath = /^\/(en|id)\/quiz(\/|$)/.test(pathname);
+  const requiresAuth = protectedRoutes.includes(pathname) || isQuizPath;
+
+  if (!session && requiresAuth) {
     const absoluteURL = new URL('/login', request.nextUrl.origin);
     return NextResponse.redirect(absoluteURL.toString());
   }
