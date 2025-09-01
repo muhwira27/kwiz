@@ -7,7 +7,8 @@
     "logout": "Logout"
   },
   "common": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "noResults": "No results"
   },
   "header": {
     "searchQuiz": "Search Quiz"
@@ -32,7 +33,21 @@
     "signUpNow": "Sign Up Now",
     "or": "OR",
     "quotes": "Those people who develop the ability to continuously acquire new and better forms of knowledge that they can apply to their work and to their lives will be the movers and shakers in our society for the indefinite future",
-    "quotesBy": "Brian Tracy"
+    "quotesBy": "Brian Tracy",
+    "resetPassword": "Reset Password",
+    "backToLogin": "Back to Login",
+    "resetPasswordSent": "Password reset email sent. Please check your inbox.",
+    "errors": {
+      "requiredEmail": "Email address is required",
+      "requiredPassword": "Password is required",
+      "requiredUsername": "Username is required",
+      "invalidEmail": "Invalid email address",
+      "emailNotRegistered": "Email is not registered",
+      "emailAlreadyInUse": "Email already in use",
+      "usernameExists": "Username already exists",
+      "weakPassword": "Password should be at least 6 characters",
+      "invalidCredentialGeneric": "Oops! We couldn't log you in. Please double-check your email and password, then try again."
+    }
   },
   "quizCard": {
     "question": "Question",
@@ -124,7 +139,8 @@
       "score": "Score",
       "answer": "Correct Answer",
       "duration": "Duration",
-      "mins": "mins"
+      "mins": "mins",
+      "empty": "No quiz history available."
     }
   }
 }

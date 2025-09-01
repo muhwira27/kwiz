@@ -7,7 +7,8 @@
     "logout": "Keluar"
   },
   "common": {
-    "loading": "Memuat..."
+    "loading": "Memuat...",
+    "noResults": "Tidak ada hasil"
   },
   "header": {
     "searchQuiz": "Cari Kuis"
@@ -32,7 +33,21 @@
     "signUpNow": "Daftar Sekarang",
     "or": "ATAU",
     "quotes": "Belajar adalah seperti berenang melawan arus; begitu berhenti, kita akan terdorong kembali. Dunia tidak pernah berhenti berubah, begitu pula dengan pengetahuan yang terus bertambah setiap harinya. Berhenti belajar berarti memilih tertinggal.",
-    "quotesBy": "Mao Zedong"
+    "quotesBy": "Mao Zedong",
+    "resetPassword": "Atur Ulang Password",
+    "backToLogin": "Kembali ke Login",
+    "resetPasswordSent": "Email reset password telah dikirim. Silakan periksa kotak masuk Anda.",
+    "errors": {
+      "requiredEmail": "Alamat email wajib diisi",
+      "requiredPassword": "Password wajib diisi",
+      "requiredUsername": "Username wajib diisi",
+      "invalidEmail": "Alamat email tidak valid",
+      "emailNotRegistered": "Email belum terdaftar",
+      "emailAlreadyInUse": "Email sudah digunakan",
+      "usernameExists": "Username sudah digunakan",
+      "weakPassword": "Password harus minimal 6 karakter",
+      "invalidCredentialGeneric": "Ups! Kami tidak bisa memasukkan Anda. Silakan periksa kembali email dan password Anda, lalu coba lagi."
+    }
   },
   "quizCard": {
     "question": "Pertanyaan",
@@ -124,7 +139,8 @@
       "score": "Skor",
       "answer": "Jawaban Benar",
       "duration": "Durasi",
-      "mins": "menit"
+      "mins": "menit",
+      "empty": "Tidak ada riwayat kuis."
     }
   }
 }
