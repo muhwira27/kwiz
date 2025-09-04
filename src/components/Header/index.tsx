@@ -65,7 +65,11 @@ export default function Header({
   useEffect(() => {
     const ac = new AbortController();
     const end = () => setIsSearching(false);
-    window.addEventListener('routeChangeEndEvent', end as any, { signal: ac.signal } as any);
+    window.addEventListener(
+      'routeChangeEndEvent',
+      end as any,
+      { signal: ac.signal } as any
+    );
     return () => ac.abort();
   }, []);
 
@@ -81,7 +85,7 @@ export default function Header({
   const nextLanguage = lang === 'en' ? 'id' : 'en';
 
   // Determine the label for the current language
-  const currentLanguageLabel = lang === 'en' ? 'EN' : 'ID';
+  const currentLanguageLabel = lang === 'en' ? 'ID' : 'EN';
 
   return (
     <header className="flex items-center justify-between px-[14px] pb-3 pt-5 sm:pr-0 md:px-0">
@@ -106,7 +110,9 @@ export default function Header({
             if (e.key === 'Enter' && keyword.trim()) {
               if (debounceRef.current) clearTimeout(debounceRef.current);
               setIsSearching(true);
-              router.push(`/${lang}/search?q=${encodeURIComponent(keyword.trim())}`);
+              router.push(
+                `/${lang}/search?q=${encodeURIComponent(keyword.trim())}`
+              );
             }
           }}
         />
@@ -123,7 +129,7 @@ export default function Header({
             className="flex items-center rounded-full bg-white px-3 py-2 text-sm font-medium shadow-custom1 transition-all hover:bg-misty-blue hover:text-white lg:px-4 lg:py-3 lg:text-base"
           >
             <Language className="mr-2" style={{ fontSize: '20px' }} />
-            {currentLanguageLabel} 
+            {currentLanguageLabel}
           </Link>
         </div>
 
