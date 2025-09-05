@@ -18,8 +18,12 @@ interface AuthType {
   ) => Promise<string | UserCredential | undefined>;
   logInWithGoogle: () => Promise<string | UserCredential | undefined>;
   logOut: () => Promise<void>;
-  updateName: (text: string) => Promise<void>;
-  updateUsername: (text: string) => Promise<void>;
+  updateName: (text: string) => Promise<string | void>;
+  updateUsername: (text: string) => Promise<string | void>;
+  updateEmailAddress: (
+    email: string,
+    currentPassword?: string
+  ) => Promise<string | void>;
   sendResetPasswordEmail: (email: string) => Promise<any>;
 }
 
@@ -53,10 +57,16 @@ export const authUserContext = createContext<AuthType>({
   logOut: function (): Promise<void> {
     throw new Error('Function not implemented.');
   },
-  updateName: function (name: string): Promise<void> {
+  updateName: function (name: string): Promise<string | void> {
     throw new Error('Function not implemented.');
   },
-  updateUsername: function (username: string): Promise<void> {
+  updateUsername: function (username: string): Promise<string | void> {
+    throw new Error('Function not implemented.');
+  },
+  updateEmailAddress: function (
+    email: string,
+    currentPassword?: string
+  ): Promise<string | void> {
     throw new Error('Function not implemented.');
   },
   sendResetPasswordEmail: function (email: string): Promise<any> {
