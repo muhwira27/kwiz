@@ -13,6 +13,9 @@ import {
   setPersistence,
   browserLocalPersistence,
   signOut,
+  updateEmail,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { auth, db } from '../config';
@@ -243,24 +246,90 @@ export function useFirebaseAuth() {
     return await signOut(auth);
   };
 
-  const updateName = async (name: string): Promise<void> => {
-    await updateDoc(doc(db, 'user', user.id!), {
-      name: name,
-    });
-    setUser({
-      ...user,
-      name: name,
-    });
+  const updateName = async (name: string): Promise<string | void> => {
+    try {
+      await updateDoc(doc(db, 'user', user.id!), {
+        name: name,
+      });
+      setUser({
+        ...user,
+        name: name,
+      });
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        return e.code;
+      }
+      return 'unknown-error';
+    }
   };
 
-  const updateUsername = async (username: string): Promise<void> => {
-    await updateDoc(doc(db, 'user', user.id!), {
-      username: username,
-    });
-    setUser({
-      ...user,
-      username: username,
-    });
+  const updateUsername = async (username: string): Promise<string | void> => {
+    try {
+      // Skip if unchanged
+      if (username === user.username) return;
+      // Ensure unique username
+      const usersRef = collection(db, 'user');
+      const q = query(usersRef, where('username', '==', username));
+      const snapshot = await getDocs(q);
+      const taken = snapshot.docs.some((d) => d.id !== user.id);
+      if (taken) return 'username-exists';
+
+      await updateDoc(doc(db, 'user', user.id!), {
+        username: username,
+      });
+      setUser({
+        ...user,
+        username: username,
+      });
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        return e.code;
+      }
+      return 'unknown-error';
+    }
+  };
+
+  const updateEmailAddress = async (
+    newEmail: string,
+    currentPassword?: string
+  ): Promise<string | void> => {
+    try {
+      const current = auth.currentUser;
+      if (!current) return 'not-authenticated';
+
+      const providerIds = current.providerData.map((p) => p.providerId);
+      const usesPassword = providerIds.includes('password');
+
+      if (usesPassword) {
+        if (!currentPassword) return 'requires-password';
+        const credential = EmailAuthProvider.credential(
+          current.email ?? '',
+          currentPassword
+        );
+        await reauthenticateWithCredential(current, credential);
+      }
+
+      await updateEmail(current, newEmail);
+      try {
+        await sendEmailVerification(current);
+      } catch {}
+
+      await updateDoc(doc(db, 'user', user.id!), {
+        email: newEmail,
+      });
+      setUser({
+        ...user,
+        email: newEmail,
+      });
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        if (e.code === 'auth/email-already-in-use') return 'email-already-in-use';
+        if (e.code === 'auth/invalid-email') return 'invalid-email';
+        if (e.code === 'auth/requires-recent-login') return 'requires-recent-login';
+        return e.code;
+      }
+      return 'unknown-error';
+    }
   };
 
   const sendResetPasswordEmail = async (email: string): Promise<any> => {
@@ -292,6 +361,7 @@ export function useFirebaseAuth() {
     logOut,
     updateName,
     updateUsername,
+    updateEmailAddress,
     sendResetPasswordEmail,
   };
 }
