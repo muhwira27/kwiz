@@ -31,6 +31,7 @@ export default function EditTextModal({
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [askPassword, setAskPassword] = useState(requirePassword);
 
   const t = useMemo(
@@ -43,7 +44,20 @@ export default function EditTextModal({
       usernameExists: lang === "id" ? "Username sudah digunakan" : "Username already exists",
       requiresPassword: lang === "id" ? "Masukkan password saat ini" : "Enter your current password",
       recentLogin: lang === "id" ? "Silakan login ulang untuk mengganti email" : "Please re-login to change email",
+      wrongPassword: lang === "id" ? "Password salah" : "Wrong password",
+      tooMany: lang === "id" ? "Terlalu banyak percobaan. Coba lagi nanti" : "Too many attempts. Try again later",
+      network: lang === "id" ? "Jaringan bermasalah" : "Network error",
+      notAuth: lang === "id" ? "Silakan login terlebih dahulu" : "Please sign in first",
+      userDisabled: lang === "id" ? "Akun dinonaktifkan" : "Account disabled",
+      opNotAllowed: lang === "id" ? "Operasi tidak diperbolehkan" : "Operation not allowed",
+      userMismatch: lang === "id" ? "Kredensial tidak cocok" : "User mismatch",
       unknown: lang === "id" ? "Terjadi kesalahan" : "Something went wrong",
+      verifyLinkSent:
+        lang === "id"
+          ? "Tautan verifikasi telah dikirim ke email baru. Silakan cek inbox untuk menyelesaikan perubahan."
+          : "A verification link has been sent to the new email. Please check your inbox to complete the change.",
+      invalidContinueUri:
+        lang === "id" ? "URL lanjutan tidak valid" : "Invalid continue URL",
     }),
     [lang]
   );
@@ -65,6 +79,7 @@ export default function EditTextModal({
 
   const handleSave = async () => {
     setError(null);
+    setSuccess(null);
     if (!value.trim()) {
       setError(t.required);
       return;
@@ -88,7 +103,18 @@ export default function EditTextModal({
           setAskPassword(true);
           setError(t.requiresPassword);
         } else if (res === "requires-recent-login") setError(t.recentLogin);
-        else setError(t.unknown);
+        else if (res === "wrong-password") setError(t.wrongPassword);
+        else if (res === "too-many-requests") setError(t.tooMany);
+        else if (res === "network-error") setError(t.network);
+        else if (res === "not-authenticated") setError(t.notAuth);
+        else if (res === "user-disabled") setError(t.userDisabled);
+        else if (res === "operation-not-allowed") setError(t.opNotAllowed);
+        else if (res === "auth/user-mismatch" || res === "user-mismatch") setError(t.userMismatch);
+        else if (res === "verify-link-sent") {
+          setSuccess(t.verifyLinkSent);
+          return;
+        }
+        else setError(`${t.unknown} (${res})`);
         return;
       }
       onClose();
@@ -124,6 +150,7 @@ export default function EditTextModal({
             </div>
           )}
           {error && <p className="text-sm text-red-600">{error}</p>}
+          {success && <p className="text-sm text-emerald-600">{success}</p>}
         </div>
         <div className="mt-5 flex justify-end gap-3">
           <button
@@ -145,4 +172,3 @@ export default function EditTextModal({
     </div>
   );
 }
-
