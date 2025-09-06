@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { useAuth } from '@/firebase/auth/AuthUserProvider';
+import { auth as firebaseAuth } from '@/firebase/config';
 import { useParams, useRouter } from 'next/navigation';
 import {
   AccountCircle,
@@ -22,6 +23,12 @@ export default function Content({ settings }: { settings: any }) {
   const [open, setOpen] = useState(false);
   const languageName =
     lang === 'en' ? settings.submenu1.english : settings.submenu1.indonesian;
+
+  const canEditEmail = useMemo(() => {
+    // Allow editing if user has password provider linked
+    const providers = firebaseAuth.currentUser?.providerData ?? [];
+    return providers.some((p) => p.providerId === 'password');
+  }, [user?.id]);
   const titles = useMemo(
     () => ({
       username: lang === 'id' ? 'Ubah Username' : 'Edit Username',
@@ -109,13 +116,53 @@ export default function Content({ settings }: { settings: any }) {
             <div className="flex flex-col gap-2 text-base">
               <p className="font-semibold text-gray-800">{settings.submenu1.email}</p>
               <p className="text-gray-400">{user.email ?? '-'}</p>
+              {!canEditEmail && (
+                <p className="text-xs text-gray-400">
+                  {lang === 'id' ? (
+                    <>
+                      Email ditautkan ke akun Google. Jika Anda ingin menggantinya, ganti di{' '}
+                      <a
+                        href="https://myaccount.google.com/security"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        Google Account
+                      </a>
+                      .
+                    </>
+                  ) : (
+                    <>
+                      Email is linked to your Google account. To change it, go to{' '}
+                      <a
+                        href="https://myaccount.google.com/security"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        Google Account
+                      </a>
+                      .
+                    </>
+                  )}
+                </p>
+              )}
             </div>
-            <button onClick={() => openModal('email')} aria-label="edit-email">
-              <ArrowForwardIosRounded
-                sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
-                color="disabled"
-              />
-            </button>
+            {canEditEmail ? (
+              <button onClick={() => openModal('email')} aria-label="edit-email">
+                <ArrowForwardIosRounded
+                  sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+                  color="disabled"
+                />
+              </button>
+            ) : (
+              <span aria-hidden>
+                <ArrowForwardIosRounded
+                  sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+                  color="disabled"
+                />
+              </span>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2 text-base">
@@ -170,6 +217,7 @@ export default function Content({ settings }: { settings: any }) {
           }
           type={editing === 'email' ? 'email' : 'text'}
           placeholder={placeholders[editing]}
+          requirePassword={editing === 'email'}
           onClose={closeModal}
           onSave={handleSave}
         />
