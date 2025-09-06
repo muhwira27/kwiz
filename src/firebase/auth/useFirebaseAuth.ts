@@ -16,6 +16,7 @@ import {
   updateEmail,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  verifyBeforeUpdateEmail,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { auth, db } from '../config';
@@ -52,6 +53,12 @@ export function useFirebaseAuth() {
       if (user) {
         const userData = await getUserData(user.uid);
         if (userData) {
+          // Keep Firestore email in sync with Auth email
+          try {
+            if (user.email && userData.email !== user.email) {
+              await updateDoc(doc(db, 'user', user.uid), { email: user.email });
+            }
+          } catch {}
           setUser({
             id: userData.id,
             name: userData.name,
@@ -296,20 +303,70 @@ export function useFirebaseAuth() {
     try {
       const current = auth.currentUser;
       if (!current) return 'not-authenticated';
+      if (newEmail === user.email) return; // nothing to do
 
       const providerIds = current.providerData.map((p) => p.providerId);
       const usesPassword = providerIds.includes('password');
 
       if (usesPassword) {
         if (!currentPassword) return 'requires-password';
-        const credential = EmailAuthProvider.credential(
-          current.email ?? '',
-          currentPassword
-        );
-        await reauthenticateWithCredential(current, credential);
+        try {
+          const credential = EmailAuthProvider.credential(
+            current.email ?? '',
+            currentPassword
+          );
+          await reauthenticateWithCredential(current, credential);
+        } catch (e: any) {
+          if (e instanceof FirebaseError) {
+            if (
+              e.code === 'auth/wrong-password' ||
+              e.code === 'auth/invalid-credential' ||
+              e.code === 'auth/invalid-login-credentials'
+            ) {
+              return 'wrong-password';
+            }
+            if (e.code === 'auth/too-many-requests') return 'too-many-requests';
+            if (e.code === 'auth/network-request-failed') return 'network-error';
+            if (
+              e.code === 'auth/user-disabled' ||
+              e.code === 'auth/user-not-found' ||
+              e.code === 'auth/user-mismatch'
+            )
+              return e.code;
+            return e.code ?? 'unknown-error';
+          }
+          return 'unknown-error';
+        }
       }
 
-      await updateEmail(current, newEmail);
+      try {
+        await updateEmail(current, newEmail);
+      } catch (e: any) {
+        if (e instanceof FirebaseError) {
+          if (e.code === 'auth/email-already-in-use') return 'email-already-in-use';
+          if (e.code === 'auth/invalid-email') return 'invalid-email';
+          if (e.code === 'auth/requires-recent-login') return 'requires-recent-login';
+          if (e.code === 'auth/operation-not-allowed') {
+            // Fallback to verify-before-update flow
+            try {
+              await verifyBeforeUpdateEmail(current, newEmail);
+              return 'verify-link-sent';
+            } catch (err: any) {
+              if (err instanceof FirebaseError) {
+                if (err.code === 'auth/invalid-email') return 'invalid-email';
+                if (err.code === 'auth/email-already-in-use') return 'email-already-in-use';
+                if (err.code === 'auth/missing-continue-uri' || err.code === 'auth/invalid-continue-uri') return 'invalid-continue-uri';
+                return err.code ?? 'unknown-error';
+              }
+              return 'unknown-error';
+            }
+          }
+          if (e.code === 'auth/user-disabled') return 'user-disabled';
+          if (e.code === 'auth/network-request-failed') return 'network-error';
+          return e.code ?? 'unknown-error';
+        }
+        return 'unknown-error';
+      }
       try {
         await sendEmailVerification(current);
       } catch {}
@@ -323,10 +380,8 @@ export function useFirebaseAuth() {
       });
     } catch (e) {
       if (e instanceof FirebaseError) {
-        if (e.code === 'auth/email-already-in-use') return 'email-already-in-use';
-        if (e.code === 'auth/invalid-email') return 'invalid-email';
-        if (e.code === 'auth/requires-recent-login') return 'requires-recent-login';
-        return e.code;
+        if (e.code === 'auth/invalid-id-token' || e.code === 'auth/user-token-expired') return 'requires-recent-login';
+        return e.code ?? 'unknown-error';
       }
       return 'unknown-error';
     }
