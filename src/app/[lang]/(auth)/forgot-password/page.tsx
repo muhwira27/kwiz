@@ -73,8 +73,8 @@ export default function ForgotPassword() {
           priority
         />
       </section>
-      <section className="flex h-fit w-full max-w-[640px] flex-col items-center gap-5 rounded-large bg-soft-white px-4 py-8 md:w-1/2 md:gap-4 md:px-12 md:py-5 min-[1280px]:gap-5 min-[1280px]:py-8 lg:w-[70%] lg:px-24">
-        <h2 className="mb-2 text-center text-xl font-bold md:mb-0 md:text-[24px]">
+      <section className="flex h-fit w-full max-w-[40rem] flex-col items-center gap-5 rounded-large bg-soft-white px-4 py-8 md:w-1/2 md:gap-4 md:px-12 md:py-5 min-[1280px]:gap-5 min-[1280px]:py-8 lg:w-[70%] lg:px-24">
+        <h2 className="mb-2 text-center text-xl font-bold md:mb-0 md:text-[1.5rem]">
           {t.forgotPassword}
         </h2>
 

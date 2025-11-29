@@ -37,9 +37,9 @@ export default async function Category({
       ) : (
         <>
           <section className="flex items-start gap-4 text-[#696F79]">
-            <Link href={`/${lang}/category`} className='pt-0.5 md:pt-[5px]'>
+            <Link href={`/${lang}/category`} className='pt-0.5 md:pt-[0.3125rem]'>
               <ArrowBack
-                sx={{ fontSize: { xs: 22, sm: 22, md: 28, lg: 28 } }}
+                sx={{ fontSize: { xs: 22, sm: 22, md: 25, lg: 25 } }}
               />
             </Link>
             <h2 className="text-lgx font-bold md:text-xxl">

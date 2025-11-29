@@ -88,7 +88,7 @@ export default function Header({
   const currentLanguageLabel = lang === 'en' ? 'ID' : 'EN';
 
   return (
-    <header className="flex items-center justify-between px-[14px] pb-3 pt-5 sm:pr-0 md:px-0">
+    <header className="flex items-center justify-between px-3.5 pb-3 pt-5 sm:pr-0 md:px-0">
       <button onClick={toggleSidebar} className="md:hidden">
         <MenuRounded className="text-slate-grey" style={{ fontSize: '30px' }} />
       </button>
@@ -97,7 +97,7 @@ export default function Header({
         <div className="pl-6 md:pl-7">
           <Search
             className="text-misty-blue"
-            sx={{ fontSize: { xs: 22, sm: 24, md: 26, lg: 28 } }}
+            sx={{ fontSize: { xs: 22, sm: 24, md: 23, lg: 25 } }}
           />
         </div>
         <input
@@ -128,7 +128,7 @@ export default function Header({
             href={redirectedPathName(nextLanguage)} // Redirect to the next language
             className="flex items-center rounded-full bg-white px-3 py-2 text-sm font-medium shadow-custom1 transition-all hover:bg-misty-blue hover:text-white lg:px-4 lg:py-3 lg:text-base"
           >
-            <Language className="mr-2" style={{ fontSize: '20px' }} />
+            <Language className="mr-2" sx={{ fontSize: { xs: 20, md: 18 } }} />
             {currentLanguageLabel}
           </Link>
         </div>

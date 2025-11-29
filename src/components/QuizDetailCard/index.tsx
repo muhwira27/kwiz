@@ -46,13 +46,13 @@ export default function QuizDetailCard({
 
       <div className="flex flex-col gap-4 text-base font-semibold text-slate-grey sm:text-lg md:gap-5 min-[1104px]:gap-7 lg:gap-8 lg:text-lgx">
         <div>
-          <span className="inline-block w-32 sm:w-[130px] md:w-[132px] lg:w-40">
+          <span className="inline-block w-32 sm:w-[8.125rem] md:w-[8.25rem] lg:w-40">
             {quizDetail.category}:
           </span>
           <span className="font-normal">{quiz.category}</span>
         </div>
         <div>
-          <span className="inline-block w-32 sm:w-[130px] md:w-[132px] lg:w-40">
+          <span className="inline-block w-32 sm:w-[8.125rem] md:w-[8.25rem] lg:w-40">
             {quizDetail.questions}:
           </span>
           <span className="font-normal">
@@ -60,7 +60,7 @@ export default function QuizDetailCard({
           </span>
         </div>
         <div>
-          <span className="inline-block w-32 sm:w-[130px] md:w-[132px] lg:w-40">
+          <span className="inline-block w-32 sm:w-[8.125rem] md:w-[8.25rem] lg:w-40">
             {quizDetail.timeLimit}:
           </span>
           <span className="font-normal">
@@ -68,7 +68,7 @@ export default function QuizDetailCard({
           </span>
         </div>
         <div>
-          <span className="inline-block w-32 sm:w-[130px] md:w-[132px] lg:w-40">
+          <span className="inline-block w-32 sm:w-[8.125rem] md:w-[8.25rem] lg:w-40">
             {quizDetail.points}:
           </span>
           <span className="font-normal">

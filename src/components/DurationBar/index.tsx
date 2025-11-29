@@ -42,7 +42,7 @@ export default function DurationBar({
 
   return (
     <section className="flex w-full items-center space-x-2">
-      <div className="flex h-8 w-full items-end justify-end overflow-hidden rounded-full border-[1px] bg-[#f4fafd] lg:h-10">
+      <div className="flex h-8 w-full items-end justify-end overflow-hidden rounded-full border bg-[#f4fafd] lg:h-10">
         <div
           style={{ width: `${progressWidth}%` }}
           className="h-full rounded-full bg-[#a4b3cc] transition-all duration-1000 ease-linear"

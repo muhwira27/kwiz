@@ -81,7 +81,7 @@ export default function QuizCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover object-center"
           />
-          <div className="absolute right-0 top-0 rounded-es-xl bg-dusk-blue px-5 py-0.5 text-[11px] font-semibold text-white md:text-xs">
+          <div className="absolute right-0 top-0 rounded-es-xl bg-dusk-blue px-5 py-0.5 text-[0.6875rem] font-semibold text-white md:text-xs">
             <p>
               {quiz.numberOfQuestions} {quizCard.question}
             </p>
@@ -98,7 +98,7 @@ export default function QuizCard({
           aria-label={isSaved ? 'Unsave quiz' : 'Save quiz'}
         >
           <Bookmark
-            sx={{ fontSize: { xs: 22, sm: 22, md: 24, lg: 24 } }}
+            sx={{ fontSize: { xs: 22, sm: 22, md: 22, lg: 22 } }}
             className={`z-50 cursor-pointer ${
               isSaved ? 'text-blue-500' : 'text-gray-400'
             }`}
@@ -106,10 +106,10 @@ export default function QuizCard({
         </div>
       </section>
 
-      <section className="flex items-center justify-between text-[11px] text-slate-grey md:text-xs">
+      <section className="flex items-center justify-between text-[0.6875rem] text-slate-grey md:text-xs">
         <div className="flex items-center gap-1">
           <AccessTimeFilled
-            sx={{ fontSize: { xs: 22, sm: 22, md: 24, lg: 24 } }}
+            sx={{ fontSize: { xs: 22, sm: 22, md: 22, lg: 22 } }}
           />
           <p>
             {Math.floor((quiz.timePerQuestion * quiz.numberOfQuestions) / 60)}{' '}

@@ -93,7 +93,7 @@ export default function StatisticCard(props: StatisticCardProps) {
 
   return (
     <div className="flex h-max w-full justify-center gap-4 sm:gap-5 md:gap-7 lg:gap-9">
-      <div className="relative hidden h-auto w-72 rounded-large min-[860px]:block md:hidden min-[1200px]:block lg:h-56 lg:w-[350px]">
+      <div className="relative hidden h-auto w-72 rounded-large min-[860px]:block md:hidden min-[1200px]:block lg:h-56 lg:w-[21.875rem]">
         <Image
           src={Profile}
           alt="Pofile"
@@ -106,7 +106,7 @@ export default function StatisticCard(props: StatisticCardProps) {
 
       <div className="flex grow flex-col justify-center gap-5 md:gap-6">
         <div className="flex flex-col items-start">
-          <p className="text-lgx font-bold text-slate-grey sm:text-xl md:text-[26px] lg:text-xxl">
+          <p className="text-lgx font-bold text-slate-grey sm:text-xl md:text-[1.625rem] lg:text-xxl">
             {userData.name}
           </p>
           <p className="text-sm font-medium text-slate-grey sm:text-base md:text-lg lg:text-lg">

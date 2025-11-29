@@ -52,9 +52,9 @@ export default function ResultModal({
   const getStarSize = (index: number) => {
     switch (index) {
       case 1:
-        return { fontSize: { xs: 85, md: 95 } };
+      return { fontSize: { xs: 85, md: 86 } };
       default:
-        return { fontSize: { xs: 70, md: 80 } };
+      return { fontSize: { xs: 70, md: 72 } };
     }
   };
 
@@ -73,7 +73,7 @@ export default function ResultModal({
 
   return (
     <section className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
-      <div className="flex w-[85%] max-w-[370px] flex-col items-center justify-center gap-8 rounded-large bg-white py-6 shadow-lg md:max-w-[430px] md:py-9">
+      <div className="flex w-[85%] max-w-[23.125rem] flex-col items-center justify-center gap-8 rounded-large bg-white py-6 shadow-lg md:max-w-[26.875rem] md:py-9">
         {/* Stars, Title, Subtitle & Score */}
         <div className="flex flex-col items-center gap-2 md:gap-4">
           <div className="-mb-7 flex h-fit items-center justify-center">
@@ -108,7 +108,7 @@ export default function ResultModal({
             </p>
           </div>
 
-          <p className="text-center text-[50px] font-semibold tracking-wider text-slate-grey md:text-[54px]">
+          <p className="text-center text-[3.125rem] font-semibold tracking-wider text-slate-grey md:text-[3.375rem]">
             {score}
           </p>
         </div>

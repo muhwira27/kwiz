@@ -118,9 +118,9 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
       ref={sidebarRef}
       className={`${
         isSidebarVisible ? ' flex translate-x-0' : 'flex -translate-x-full'
-      } fixed left-0 top-0 z-20 h-dvh w-fit transform flex-col gap-8 bg-[#fbf9f9] pt-[37px] transition-transform duration-300 ease-in-out md:sticky md:flex md:h-screen md:translate-x-0 md:bg-transparent lg:gap-9`}
+      } fixed left-0 top-0 z-20 h-dvh w-fit transform flex-col gap-8 bg-[#fbf9f9] pt-[2.3125rem] transition-transform duration-300 ease-in-out md:sticky md:flex md:h-screen md:translate-x-0 md:bg-transparent lg:gap-9`}
     >
-      <div className="flex items-center gap-[2px] pl-16">
+      <div className="flex items-center gap-0.5 pl-16">
         <Image
           src={Logo}
           priority
@@ -130,7 +130,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
         <Image
           src={Kwiz}
           priority
-          className="h-auto w-24 md:w-[104px] lg:w-[107px]"
+          className="h-auto w-24 md:w-[6.5rem] lg:w-[6.6875rem]"
           alt="Kwiz"
         />
       </div>
@@ -143,7 +143,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
                 <Link
                   href={item.href}
                   onClick={handleNavLinkClick}
-                  className={`flex w-56 items-center justify-start gap-7 rounded-large px-10 py-4 text-slate-grey md:w-60 lg:w-[272px] lg:gap-8
+                  className={`flex w-56 items-center justify-start gap-7 rounded-large px-10 py-4 text-slate-grey md:w-60 lg:w-[17rem] lg:gap-8
                     ${
                       pathname.includes(item.href)
                         ? 'pointer-events-none bg-misty-blue text-white'
@@ -152,7 +152,7 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
                   `}
                 >
                   <item.icon
-                    sx={{ fontSize: { xs: 22, sm: 24, md: 25, lg: 26 } }}
+                    sx={{ fontSize: { xs: 22, sm: 24, md: 23, lg: 24 } }}
                   />
                   <span className="rounded text-base font-semibold md:text-lg lg:text-lgx">
                     {item.name}
@@ -166,9 +166,9 @@ export default function Sidebar({ menu, lang }: { menu: Menu; lang: Locale }) {
         <div className="mt-auto pb-2">
           <button
             onClick={handleLogout}
-            className="flex w-56 items-center justify-start gap-7 rounded-large px-10 py-4 text-slate-grey hover:bg-misty-blue hover:bg-opacity-20 md:w-60 lg:w-[272px] lg:gap-8"
+            className="flex w-56 items-center justify-start gap-7 rounded-large px-10 py-4 text-slate-grey hover:bg-misty-blue hover:bg-opacity-20 md:w-60 lg:w-[17rem] lg:gap-8"
           >
-            <Logout sx={{ fontSize: { xs: 22, sm: 24, md: 25, lg: 26 } }} />
+            <Logout sx={{ fontSize: { xs: 22, sm: 24, md: 23, lg: 24 } }} />
             <span className="text-base font-semibold md:text-lg lg:text-lgx">
               Logout
             </span>

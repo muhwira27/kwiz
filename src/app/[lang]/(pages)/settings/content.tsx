@@ -95,7 +95,7 @@ export default function Content({ settings }: { settings: any }) {
             </div>
             <button onClick={() => openModal('username')} aria-label="edit-username">
               <ArrowForwardIosRounded
-                sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+                sx={{ fontSize: { xs: 18, sm: 24, md: 22, lg: 23 } }}
                 color="disabled"
               />
             </button>
@@ -107,7 +107,7 @@ export default function Content({ settings }: { settings: any }) {
             </div>
             <button onClick={() => openModal('name')} aria-label="edit-name">
               <ArrowForwardIosRounded
-                sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+                sx={{ fontSize: { xs: 18, sm: 24, md: 22, lg: 23 } }}
                 color="disabled"
               />
             </button>
@@ -151,14 +151,14 @@ export default function Content({ settings }: { settings: any }) {
             {canEditEmail ? (
               <button onClick={() => openModal('email')} aria-label="edit-email">
                 <ArrowForwardIosRounded
-                  sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+                  sx={{ fontSize: { xs: 18, sm: 24, md: 22, lg: 23 } }}
                   color="disabled"
                 />
               </button>
             ) : (
               <span aria-hidden>
                 <ArrowForwardIosRounded
-                  sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+                  sx={{ fontSize: { xs: 18, sm: 24, md: 22, lg: 23 } }}
                   color="disabled"
                 />
               </span>
@@ -171,7 +171,7 @@ export default function Content({ settings }: { settings: any }) {
             </div>
             <button onClick={() => openModal('language')} aria-label="edit-language">
               <ArrowForwardIosRounded
-                sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+                sx={{ fontSize: { xs: 18, sm: 24, md: 22, lg: 23 } }}
                 color="disabled"
               />
             </button>
@@ -190,7 +190,7 @@ export default function Content({ settings }: { settings: any }) {
               {settings.submenu1.password}
             </p>
             <ArrowForwardIosRounded
-              sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+              sx={{ fontSize: { xs: 18, sm: 24, md: 22, lg: 23 } }}
               color="disabled"
             />
           </div>
@@ -199,7 +199,7 @@ export default function Content({ settings }: { settings: any }) {
               {settings.submenu1.delete}
             </p>
             <ArrowForwardIosRounded
-              sx={{ fontSize: { xs: 18, sm: 24, md: 25, lg: 26 } }}
+              sx={{ fontSize: { xs: 18, sm: 24, md: 22, lg: 23 } }}
               color="disabled"
             />
           </div>

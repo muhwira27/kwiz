@@ -13,11 +13,11 @@ type InfoBdgeProps = {
 
 export default function InfoBadge(props: InfoBdgeProps) {
   return (
-    <div className="flex w-[155px] items-center gap-3 bg-transparent sm:w-40 md:w-[180px] lg:w-48 lg:gap-4">
+    <div className="flex w-[9.6875rem] items-center gap-3 bg-transparent sm:w-40 md:w-[11.25rem] lg:w-48 lg:gap-4">
       <div className="flex items-center justify-center rounded-xl bg-white p-3 shadow-custom1">
         <props.icon
           className="text-slate-grey"
-          sx={{ fontSize: { xs: 24, sm: 26, md: 28, lg: 30 } }}
+          sx={{ fontSize: { xs: 24, sm: 26, md: 25, lg: 27 } }}
         ></props.icon>
       </div>
 

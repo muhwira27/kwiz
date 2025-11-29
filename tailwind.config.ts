@@ -8,13 +8,13 @@ const config: Config = {
   ],
   theme: {
     fontSize: {
-      xs: ['12px', '18px'],
-      sm: ['14px', '21px'],
-      base: ['16px', '24px'],
-      lg: ['18px', '27px'],
-      xl: ['22px', '33px'],
-      '2xl': ['30px', '45px'],
-      '3xl': ['33px', '50px'],
+      xs: ['0.75rem', '1.125rem'],
+      sm: ['0.875rem', '1.3125rem'],
+      base: ['1rem', '1.5rem'],
+      lg: ['1.125rem', '1.6875rem'],
+      xl: ['1.375rem', '2.0625rem'],
+      '2xl': ['1.875rem', '2.8125rem'],
+      '3xl': ['2.0625rem', '3.125rem'],
     },
     screens: {
       'sm': '576px',
@@ -23,9 +23,9 @@ const config: Config = {
     },
     extend: {
       fontSize: {
-        xxs: ['10px', '15px'],
-        lgx: ['20px', '30px'],
-        xxl: ['25px', '38px'],
+        xxs: ['0.625rem', '0.9375rem'],
+        lgx: ['1.25rem', '1.875rem'],
+        xxl: ['1.5625rem', '2.375rem'],
       },
       colors: {
         'misty-blue': '#8692A6',

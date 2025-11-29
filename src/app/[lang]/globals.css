@@ -6,6 +6,16 @@ body {
   background: #fbf9f9;
 }
 
+:root {
+  font-size: 100%;
+}
+
+@media (min-width: 960px) {
+  :root {
+    font-size: 90%;
+  }
+}
+
 /* Custom scrollbar styling */
 .custom-scrollbar {
   scrollbar-width: thin;
