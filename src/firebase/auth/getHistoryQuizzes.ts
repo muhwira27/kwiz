@@ -22,7 +22,7 @@ export async function getHistoryQuizzes(
     ? historyQuizzesDoc.data()?.historyQuizzes || []
     : [];
 
-  const quizHistory: QuizHistory[] = [];
+  const quizHistory: { data: QuizHistory; sortTime: number }[] = [];
 
   // Loop through each history quiz entry
   for (const historyQuiz of historyQuizzes) {
@@ -78,16 +78,21 @@ export async function getHistoryQuizzes(
     // Calculate correct answer
     const correctAnswer = scorePerQuestion ? score / scorePerQuestion : 0;
 
-    // Add the formatted quiz data to the array
+    // Add the formatted quiz data to the array, keep sort key for latest-first ordering
     quizHistory.push({
-      dateAttempt,
-      quizName: quizName!,
-      score,
-      numberOfQuestions: numberOfQuestions!,
-      duration: parseFloat(duration.toFixed(2)),
-      correctAnswer: correctAnswer,
+      sortTime: end.getTime(),
+      data: {
+        dateAttempt,
+        quizName: quizName!,
+        score,
+        numberOfQuestions: numberOfQuestions!,
+        duration: parseFloat(duration.toFixed(2)),
+        correctAnswer: correctAnswer,
+      },
     });
   }
 
-  return quizHistory;
+  return quizHistory
+    .sort((a, b) => b.sortTime - a.sortTime)
+    .map((item) => item.data);
 }
