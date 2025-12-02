@@ -28,7 +28,7 @@ export default function Content({ settings }: { settings: any }) {
     // Allow editing if user has password provider linked
     const providers = firebaseAuth.currentUser?.providerData ?? [];
     return providers.some((p) => p.providerId === 'password');
-  }, [user?.id]);
+  }, []);
   const titles = useMemo(
     () => ({
       username: lang === 'id' ? 'Ubah Username' : 'Edit Username',

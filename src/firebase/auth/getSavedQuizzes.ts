@@ -22,7 +22,11 @@ export function getSavedQuizzes(
     return () => {};
   }
 
-  const ids = [...new Set(savedQuizzes)];
+  // De-duplicate without relying on iterator spreads (keeps ES5 target happy)
+  const ids: string[] = [];
+  for (const id of savedQuizzes) {
+    if (!ids.includes(id)) ids.push(id);
+  }
   const chunks: string[][] = [];
   for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
     chunks.push(ids.slice(i, i + CHUNK_SIZE));
